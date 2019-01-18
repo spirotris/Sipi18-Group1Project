@@ -1,3 +1,4 @@
+package com.GroupOne;
 import java.io.IOException;
 import org.jibble.pircbot.*;
 
