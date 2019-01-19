@@ -1,34 +1,33 @@
 /*
- * Source: https://www.tvmaze.com/api
+ * Source for API info: https://www.tvmaze.com/api
  * Author: Marcus Laitala
  * Date: 2019-01-17 
  */
 
-// Example cases: tv psych
 package com.sipi.groupOne;
 import java.net.*;
 import org.json.simple.JSONObject;
 
 class TVserier {
-	
-	
-	//Full API link
-	private URL linkToAPI;
-	private String searchValue = "";
+
+	//https://www.tvmaze.com/api/search/shows?q=
+	private static URL linkToAPI;
+	private static final String embed = "&embed=";
+	private static final String search = "search/";
+	private static String searchValue = "";
 	
 	TVserier() {
 		try {
-			linkToAPI = new URL("https://www.tvmaze.com/api/search/shows?q=");		
+			linkToAPI = new URL("https://api.tvmaze.com/");		
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}		
 	}
 	
-	private String jsonResponse() {
+	private static String jsonResponse() {
         String json = linkToAPI + searchValue;
         ApiCon tvmazeAPI = new ApiCon();
-        JSONObject response = tvmazeAPI.tryApi(json);
+        JSONObject response = tvmazeAPI.tryApi(json);        
         return String.format("Svaret är tomt, boten under arbete");
 }
 	
@@ -41,42 +40,8 @@ class TVserier {
 		 * Seasons
 		 * Episodes
 		 */
-		switch (keywords[0].toLowerCase()) {
-		case "show":
+		searchValue = keywords[0].toLowerCase() + embed + keywords[1];	
+		return jsonResponse();
+	}
 			
-			break;
-		case "":
-			
-			break;
-		case "":
-			
-			break;
-		case "":
-			
-			break;
-		case "":
-			
-			break;
-		case "":
-			
-			break;
-		case "":
-			
-			break;
-		case "":
-			
-			break;
-		case "":
-			
-			break;
-		case "":
-			
-			break;
-			
-		default:
-			break;
-		}
-		
-		return "";
-	}	
 }
