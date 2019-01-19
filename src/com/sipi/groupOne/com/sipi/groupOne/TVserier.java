@@ -5,7 +5,9 @@
  */
 
 // Example cases: tv psych
+package com.sipi.groupOne;
 import java.net.*;
+
 class TVserier {
 	
 	private URL api; //Link to the API
