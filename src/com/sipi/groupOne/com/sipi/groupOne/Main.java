@@ -1,5 +1,4 @@
 package com.sipi.groupOne;
-import com.sipi.groupOne.*;
 
 public class Main {
 
