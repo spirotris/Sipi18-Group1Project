@@ -1,4 +1,5 @@
-package com.GroupOne;
+package com.sipi.groupOne;
+
 import java.io.IOException;
 import org.jibble.pircbot.*;
 
