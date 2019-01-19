@@ -16,11 +16,8 @@ public class BotProject extends PircBot {
 
     @Override
     public void onMessage(String channel, String sender,
-            String login, String hostname, String message) {
-    	String command = message.substring(0, message.indexOf(" ")).toLowerCase();
-    	String searchValue = message.substring(message.indexOf(" ")).toLowerCase();
-    	
-        switch (command) {
+            String login, String hostname, String message) {        
+        switch (message.toLowerCase()) {
 		case "time":
 			String time = new java.util.Date().toString();
             sendMessage(channel, sender + ": The time is now " + time);
