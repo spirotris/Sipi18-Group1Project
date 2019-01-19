@@ -16,21 +16,11 @@ public class BotProject extends PircBot {
 
     @Override
     public void onMessage(String channel, String sender,
-            String login, String hostname, String message) {        
-        switch (message.toLowerCase()) {
-		case "time":
-			String time = new java.util.Date().toString();
+            String login, String hostname, String message) {
+        if (message.equalsIgnoreCase("time")) {
+            String time = new java.util.Date().toString();
             sendMessage(channel, sender + ": The time is now " + time);
-			break;
-		case "movie":
-			
-			break;
-		case "tv":
-			
-			break;
-
-		default:
-			break;
-		}
+        }
     }
+
 }
