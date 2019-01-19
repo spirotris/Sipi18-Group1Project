@@ -19,7 +19,7 @@ public class BotProject extends PircBot {
     // Scanning the chat in the channel for commands
     @Override
     public void onMessage(String channel, String sender,
-            String login, String hostname, String message) {
+                          String login, String hostname, String message) {
         // Cleaning up the chat to find a command to process
         String command = message.substring(0, message.indexOf(" "));
         String searchValue = message.substring(message.indexOf(" "));
@@ -31,5 +31,4 @@ public class BotProject extends PircBot {
             //Movie movie = new Movie(searchValue.trim());
         }
     }
-
 }

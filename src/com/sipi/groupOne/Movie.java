@@ -1,4 +1,4 @@
-package com.GroupOne;
+package com.sipi.groupOne;
 
 import org.json.simple.JSONObject;
 
