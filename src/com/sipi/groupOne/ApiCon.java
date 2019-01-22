@@ -1,9 +1,5 @@
 package com.sipi.groupOne;
 
-
-// API-Key: 3f3e80c9
-// Request-adress(title): http://www.omdbapi.com/?apikey=[3f3e80c9]&t=
-
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -13,6 +9,8 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Scanner;
+
+// TODO: 2019-01-22 Borde det vara return null om något exception blir catchat?
 
 public class ApiCon {
 
@@ -28,10 +26,9 @@ public class ApiCon {
         int responseCode = 0;
         Scanner scan = null;
         String jsonResponse = "";
-        String json = ""; // TA BORT!
         // Handling errors for the address to the api
         try {
-            url = new URL(json);
+            url = new URL(apiUrl);
         } catch (MalformedURLException e) {
             System.out.println("Något blev fel!");
             System.out.println(e.getMessage());
@@ -49,7 +46,7 @@ public class ApiCon {
             System.out.println("Anslutningen till Api:t misslyckades");
             System.out.println(e.getMessage());
         }
-        // Check the responsecode, throw exception if not succesful
+        // Check the responsecode, throw exception if not successful
         if (responseCode != 200) {
             throw new RuntimeException("Fel vid anslutning responsecode: " + responseCode);
         } else {
@@ -67,7 +64,9 @@ public class ApiCon {
                 System.out.println(e.getMessage());
             }
         }
+
         JSONParser parse = new JSONParser();
+
         // Try to make an JSONObject of the response from the api
         try {
             obj = (JSONObject) parse.parse(jsonResponse);

@@ -2,21 +2,34 @@ package com.sipi.groupOne;
 
 import org.json.simple.JSONObject;
 
-public class Movie {
+class Movie {
     private String url = "http://www.omdbapi.com/?apikey=3f3e80c9&t=";
-    private String searchValue = "";
+    private String searchValue;
 
-    public Movie(String searchValue) {
+    private String jsonValue;
+
+    Movie(String searchValue) {
         this.searchValue = searchValue;
         System.out.println(url+searchValue);
+        initJSON();
     }
 
-    private String jsonResponse() {
-        String json = url + searchValue;
+    private void initJSON() {
+        String json = url + searchValue.replace(" ", "+");
         ApiCon omdbApi = new ApiCon();
         JSONObject response = omdbApi.tryApi(json);
-        return String.format("Svaret är tomt, boten under arbete");
+        if(response == null || response.isEmpty()) {
+            jsonValue = String.format("Svaret är tomt, boten under arbete");
+        } else {
+            System.out.println(response.toJSONString());
+            jsonValue = response.toString();
+        }
     }
+
+    String getJSONvalue() {
+        return jsonValue;
+    }
+
     /*private String title;
     private String year;
     private String rated;
