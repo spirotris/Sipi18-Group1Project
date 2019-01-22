@@ -1,4 +1,4 @@
-package com.sipi.groupOne;
+package com.sipi.groupOne.connections;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONValue;

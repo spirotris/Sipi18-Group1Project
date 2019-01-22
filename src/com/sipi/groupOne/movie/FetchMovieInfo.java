@@ -1,6 +1,6 @@
 package com.sipi.groupOne.movie;
 
-import com.sipi.groupOne.ApiCon;
+import com.sipi.groupOne.connections.ApiCon;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
