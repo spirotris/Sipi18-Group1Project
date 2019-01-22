@@ -12,15 +12,15 @@ import java.util.Iterator;
 
 public class FetchMovieInfo {
     private String url;
-    private String searchValue;
-    private String sender;
+    private final String SEARCHVALUE;
+    private final String SENDER;
 
     private String jsonValue;
 
     // Contructor
     public FetchMovieInfo(String sender, String searchValue) {
-        this.searchValue = searchValue;
-        this.sender = sender;
+        SEARCHVALUE = searchValue;
+        SENDER = sender;
         if(initURL()) {
             initJSON();
         } else {
@@ -43,7 +43,7 @@ public class FetchMovieInfo {
 
     // Get information from the api using ApiCon
     private void initJSON() {
-        String json = url + searchValue.replace(" ", "+");
+        String json = url + SEARCHVALUE.replace(" ", "+");
         ApiCon omdbApi = new ApiCon();
 
         // Gets an array in return from ApiCon
@@ -54,9 +54,9 @@ public class FetchMovieInfo {
 
         // Checks whether the response is true or false (if there was any movies or not) and a safety check so that the array isn't empty
         if(responseObject.get("Response").equals("False") || responseObjects.isEmpty()) {
-            jsonValue = "Hej " + sender + "! Jag hittade ingen film med det namnet!";
+            jsonValue = "Hej " + SENDER + "! Jag hittade ingen film med det namnet!";
         } else {
-            jsonValue = "Hej " + sender + "! Jag hittade ";
+            jsonValue = "Hej " + SENDER + "! Jag hittade ";
             // Picks ut the search-results
             for(Object searchResults : responseObjects) {
                 JSONObject o = (JSONObject)searchResults;

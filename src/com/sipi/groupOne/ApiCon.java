@@ -1,10 +1,7 @@
 package com.sipi.groupOne;
 
 import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -68,8 +65,6 @@ public class ApiCon {
                 return null;
             }
         }
-
-        JSONParser parse = new JSONParser();
 
         // Make an JSONObject of the response from the api
         obj = JSONValue.parse(jsonResponse);

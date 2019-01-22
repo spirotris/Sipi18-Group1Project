@@ -24,8 +24,7 @@ public class BotProject extends PircBot {
         String searchResult = ChannelScreener.message(sender,message);
 
         // Checking that the answer is null, if it is it's not a command for Anna and she shouldn't do a thing
-        if(searchResult == null || searchResult.isEmpty()) {
-        } else {
+        if(searchResult != null) {
             sendMessage(channel, searchResult);
         }
     }
