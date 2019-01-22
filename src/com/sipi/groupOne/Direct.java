@@ -1,6 +1,6 @@
 package com.sipi.groupOne;
 
-import com.sipi.groupOne.Movie.Movie;
+import com.sipi.groupOne.movie.Movie;
 
 public class Direct {
 
@@ -14,8 +14,8 @@ public class Direct {
                 return sender + ": The time is now " + time;
             case "movie":
                 // To call the omdb api and get some movie-info
-                Movie movie = new Movie(searchString(msgArray));
-                return "Hej " + sender + " jag hittade " + movie.getJsonvalue();
+                Movie movie = new Movie(sender, searchString(msgArray));
+                return movie.getAnswer();
             case "serie":
                 return "Hej " + sender + "! Du sökte på " + msgArray[0]+ " och skrev: " + searchString(msgArray);
         }
@@ -28,7 +28,10 @@ public class Direct {
     private static String searchString(String[] searchArr) {
         StringBuilder str = new StringBuilder();
         for (int i = 1; i < searchArr.length; i++) {
-            str.append(searchArr[i] + " ");
+            if((searchArr.length -1) != i)
+                str.append(searchArr[i] + " ");
+            else
+                str.append(searchArr[i]);
         }
         return str.toString();
     }

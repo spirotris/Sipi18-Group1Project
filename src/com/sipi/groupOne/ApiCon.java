@@ -30,11 +30,11 @@ public class ApiCon {
         try {
             url = new URL(apiUrl);
         } catch (MalformedURLException e) {
-            System.out.println("Något blev fel!");
-            System.out.println(e.getMessage());
+            System.out.println("Något är fel med URL-adressen");
+            e.printStackTrace();
         } catch (Exception e) {
             System.out.println("Något blev fel:");
-            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
         // Testing the connection
         try {
@@ -44,24 +44,21 @@ public class ApiCon {
             responseCode = con.getResponseCode();
         } catch (Exception e) {
             System.out.println("Anslutningen till Api:t misslyckades");
-            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
         // Check the responsecode, throw exception if not successful
         if (responseCode != 200) {
             throw new RuntimeException("Fel vid anslutning responsecode: " + responseCode);
         } else {
-
             try {
                 scan = new Scanner(url.openStream());
                 while(scan.hasNext()) {
                     jsonResponse += scan.nextLine();
                 }
-                System.out.println("\n JSON data-string");
-                System.out.println(jsonResponse);
                 scan.close();
             } catch (IOException e) {
                 System.out.println("Lyckades inte öppna strömmen!");
-                System.out.println(e.getMessage());
+                e.printStackTrace();
             }
         }
 
@@ -72,7 +69,7 @@ public class ApiCon {
             obj = (JSONObject) parse.parse(jsonResponse);
         } catch (ParseException e) {
             System.out.println("Kunde inte utvinna JSON-koden från svaret.");
-            System.out.println(e.getErrorType());
+            e.printStackTrace();
         }
         return obj;
     }

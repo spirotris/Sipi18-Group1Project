@@ -1,3 +1,6 @@
+# Project specific ignores
+
+*.properties
 
 # Created by https://www.gitignore.io/api/eclipse,netbeans,intellij
 # Edit at https://www.gitignore.io/?templates=eclipse,netbeans,intellij
@@ -107,7 +110,7 @@ local.properties
 # When using Gradle or Maven with auto-import, you should exclude module files,
 # since they will be recreated, and may cause churn.  Uncomment if using
 # auto-import.
-# .idea/modules.xml
+.idea/modules.xml
 # .idea/*.iml
 # .idea/modules
 
@@ -147,9 +150,9 @@ fabric.properties
 ### Intellij Patch ###
 # Comment Reason: https://github.com/joeblau/gitignore.io/issues/186#issuecomment-215987721
 
-# *.iml
-# modules.xml
-# .idea/misc.xml
+*.iml
+modules.xml
+.idea/misc.xml
 # *.ipr
 
 # Sonarlint plugin

@@ -20,6 +20,13 @@ public class BotProject extends PircBot {
     @Override
     public void onMessage(String channel, String sender,
                           String login, String hostname, String message) {
-        sendMessage(channel, Direct.message(sender,message));
+        // Getting the result
+        String searchResult = Direct.message(sender,message);
+
+        // Checking that the answer is null, if it is it's not a command for Anna and she shouldn't do a thing
+        if(searchResult == null || searchResult.isEmpty()) {
+        } else {
+            sendMessage(channel, searchResult);
+        }
     }
 }
