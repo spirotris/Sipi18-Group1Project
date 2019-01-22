@@ -1,8 +1,8 @@
 package com.sipi.groupOne;
 
-import com.sipi.groupOne.movie.Movie;
+import com.sipi.groupOne.movie.FetchMovieInfo;
 
-public class Direct {
+public class ChannelScreener {
 
     public static String message(String sender, String msg) {
         // Cleaning up the chat.message to find a command to process
@@ -14,7 +14,7 @@ public class Direct {
                 return sender + ": The time is now " + time;
             case "movie":
                 // To call the omdb api and get some movie-info
-                Movie movie = new Movie(sender, searchString(msgArray));
+                FetchMovieInfo movie = new FetchMovieInfo(sender, searchString(msgArray));
                 return movie.getAnswer();
             case "serie":
                 return "Hej " + sender + "! Du sökte på " + msgArray[0]+ " och skrev: " + searchString(msgArray);
