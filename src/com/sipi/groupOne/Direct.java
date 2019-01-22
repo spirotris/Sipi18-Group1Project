@@ -1,5 +1,7 @@
 package com.sipi.groupOne;
 
+import com.sipi.groupOne.Movie.Movie;
+
 public class Direct {
 
     public static String message(String sender, String msg) {
@@ -9,14 +11,13 @@ public class Direct {
         switch (msgArray[0].toLowerCase()) {
             case "time":
                 String time = new java.util.Date().toString();
-                return String.format(sender + ": The time is now " + time);
+                return sender + ": The time is now " + time;
             case "movie":
-                // To call the omdb api and get a movie-title
+                // To call the omdb api and get some movie-info
                 Movie movie = new Movie(searchString(msgArray));
-                return movie.getJSONvalue();
-                //return String.format("Hej " + sender + "! Du sökte på " + msgArray[0]+ " och skrev: " + searchString(msgArray)); // OBS
+                return "Hej " + sender + " jag hittade " + movie.getJsonvalue();
             case "serie":
-                return String.format("Hej " + sender + "! Du sökte på " + msgArray[0]+ " och skrev: " + searchString(msgArray));
+                return "Hej " + sender + "! Du sökte på " + msgArray[0]+ " och skrev: " + searchString(msgArray);
         }
 
         return null;

@@ -1,32 +1,35 @@
-package com.sipi.groupOne;
+package com.sipi.groupOne.Movie;
 
+import com.sipi.groupOne.ApiCon;
 import org.json.simple.JSONObject;
 
-class Movie {
+public class Movie {
     private String url = "http://www.omdbapi.com/?apikey=3f3e80c9&t=";
     private String searchValue;
 
     private String jsonValue;
 
-    Movie(String searchValue) {
+    public Movie(String searchValue) {
         this.searchValue = searchValue;
-        System.out.println(url+searchValue);
         initJSON();
     }
 
+    // Get information from the api using ApiCon
     private void initJSON() {
         String json = url + searchValue.replace(" ", "+");
         ApiCon omdbApi = new ApiCon();
-        JSONObject response = omdbApi.tryApi(json);
-        if(response == null || response.isEmpty()) {
-            jsonValue = String.format("Svaret är tomt, boten under arbete");
+        JSONObject responseObject = omdbApi.tryApi(json);
+        if(responseObject.get("Response").toString().equalsIgnoreCase("false")) {
+            jsonValue = " ingen film med det namnet!";
         } else {
-            System.out.println(response.toJSONString());
-            jsonValue = response.toString();
+            jsonValue = responseObject.get("Title") +
+                    ", som släpptes " + responseObject.get("Released") +
+                    ". Den är " + responseObject.get("Runtime") + " lång.";
+
         }
     }
 
-    String getJSONvalue() {
+    public String getJsonvalue() {
         return jsonValue;
     }
 
