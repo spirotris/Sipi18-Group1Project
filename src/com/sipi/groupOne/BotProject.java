@@ -16,13 +16,16 @@ public class BotProject extends PircBot {
         this.joinChannel("#group1-lernia");
     }
 
+    // Scanning the chat in the channel for commands
     @Override
     public void onMessage(String channel, String sender,
-            String login, String hostname, String message) {
-        if (message.equalsIgnoreCase("time")) {
-            String time = new java.util.Date().toString();
-            sendMessage(channel, sender + ": The time is now " + time);
+                          String login, String hostname, String message) {
+        // Getting the result
+        String searchResult = ChannelScreener.message(sender,message);
+
+        // Checking that the answer is null, if it is it's not a command for Anna and she shouldn't do a thing
+        if(searchResult != null) {
+            sendMessage(channel, searchResult);
         }
     }
-
 }
