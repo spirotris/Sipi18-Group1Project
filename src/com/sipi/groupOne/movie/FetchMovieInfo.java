@@ -1,6 +1,6 @@
 package com.sipi.groupOne.movie;
 
-import com.sipi.groupOne.connections.ApiCon;
+import com.sipi.groupOne.connections.JSONCon;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -41,12 +41,12 @@ public class FetchMovieInfo {
         }
     }
 
-    // Get information from the api using ApiCon
+    // Get information from the api using JSONCon
     private void initJSON() {
         String json = url + SEARCHVALUE.replace(" ", "+");
-        ApiCon omdbApi = new ApiCon();
+        JSONCon omdbApi = new JSONCon();
 
-        // Gets an array in return from ApiCon
+        // Gets an array in return from JSONCon
         JSONArray responseObjects = omdbApi.tryApi(json);
 
         // Picks the first row from the api-response

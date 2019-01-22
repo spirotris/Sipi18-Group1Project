@@ -9,10 +9,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Scanner;
 
-public class ApiCon {
+public class JSONCon {
 
     // Constructor
-    public ApiCon() {
+    public JSONCon() {
     }
 
     // Getting the JSON answer and returning an JSONObject
