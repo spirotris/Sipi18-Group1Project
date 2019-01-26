@@ -21,10 +21,10 @@ public class ChannelScreener {
             case "tv":
             case "!tv":
             	TVserier tv = new TVserier(sender, msgArray);
-                return tv.getAnswer(); 
+                return tv.getAnswer();            
+            default:
+            	return "Hej " + sender + "! \"" + msg + "\" är inte ett giltigt kommando!";
         }
-
-        return null;
     }
 
     // Generates a string with the searchterm from the message and returning it
