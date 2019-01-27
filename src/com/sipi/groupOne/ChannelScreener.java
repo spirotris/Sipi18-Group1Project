@@ -1,6 +1,7 @@
 package com.sipi.groupOne;
 
 import com.sipi.groupOne.movie.FetchMovieInfo;
+import com.sipi.groupOne.test.FetchGPS;
 import com.sipi.groupOne.tv.TVserier;
 
 public class ChannelScreener {
@@ -18,13 +19,14 @@ public class ChannelScreener {
                 FetchMovieInfo movie = new FetchMovieInfo(sender, searchString(msgArray));
                 return movie.getAnswer();
             case "serie":
-            case "tv":
+            case "gps":
+                FetchGPS gps = new FetchGPS(sender,searchString(msgArray));
+                return gps.getAnswer();
             case "!tv":
             	TVserier tv = new TVserier(sender, msgArray);
-                return tv.getAnswer();            
-            default:
-            	return "Hej " + sender + "! \"" + msg + "\" är inte ett giltigt kommando!";
+                return tv.getAnswer();
         }
+        return null;
     }
 
     // Generates a string with the searchterm from the message and returning it
