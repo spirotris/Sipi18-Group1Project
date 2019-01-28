@@ -40,7 +40,6 @@ public class FetchTV {
             jsonValue = "Hej " + SENDER + "! Jag hittade ";
             // Picks ut the search-results
             for (Object searchResults : responseObjects) {
-                //JSONObject o = (JSONObject) searchResults;
                 JSONArray resultsArr = (JSONArray) searchResults;
 
                 Iterator serieItr = resultsArr.iterator();
@@ -49,7 +48,6 @@ public class FetchTV {
                     Object slide = serieItr.next();
                     JSONObject serie = (JSONObject) slide;
                     System.out.println(serie.toJSONString());
-                    String name = "";
                     JSONObject showInfo = (JSONObject) serie.get("show");
                     jsonValue += showInfo.get("name") + ", har poäng " + serie.get("score") + "; ";
                 }
