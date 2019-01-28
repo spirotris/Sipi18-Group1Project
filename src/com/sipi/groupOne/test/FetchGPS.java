@@ -83,5 +83,5 @@ public class FetchGPS {
     // To receive the answer from the api
     public String getAnswer() {
             return jsonValue;
-        }
+    }
 }
