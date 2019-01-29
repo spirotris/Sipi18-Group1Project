@@ -44,6 +44,8 @@ public class FetchMovieInfo {
     // Get information from the api using JSONCon
     private void initJSON() {
         String json = url + SEARCHVALUE.replace(" ", "+");
+        String firstResult = "tomt svar.";
+        int nrResults = 0;
         JSONCon omdbApi = new JSONCon();
 
         // Gets an array in return from JSONCon
@@ -63,13 +65,25 @@ public class FetchMovieInfo {
                 System.out.println(o.toJSONString());
                 JSONArray resultsArr = (JSONArray)o.get("Search");
                 Iterator movieItr = resultsArr.iterator();
-                // Iterates through them to get the information i wan't
+
+                // Iterates through the results to find the first movie and print it out
                 while (movieItr.hasNext()) {
                     Object slide = movieItr.next();
                     JSONObject movie = (JSONObject) slide;
-                    if(movie.get("Type").equals("movie"))
-                        jsonValue += movie.get("Title") + ", från " + movie.get("Year") + "; ";
+                    // Checks if the answer is a movie
+                    if(movie.get("Type").equals("movie")) {
+                        // If it is the first result if it is it will be displayed
+                        if(nrResults == 0) {
+                            firstResult = movie.get("Title") + ", från " + movie.get("Year") + ". ";
+                        }
+                        nrResults++;
+                    }
                 }
+            }
+            if(nrResults == 1) {
+                jsonValue += firstResult;
+            } else {
+                jsonValue += nrResults + " filmer som matchade din förfrågan. Första svaret var: " + firstResult + "Försök att göra en mer noggrann sökning om det var fel svar!";
             }
         }
     }
