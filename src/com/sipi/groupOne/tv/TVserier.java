@@ -7,11 +7,7 @@
 package com.sipi.groupOne.tv;
 
 import java.net.*;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 import com.sipi.groupOne.connections.JSONCon;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -102,7 +98,8 @@ public class TVserier {
 		// get specific episode (by season nr and episode nr)
 		// show psych cast
 		/*
-		 * Switch on the following Show People (Person?) Seasons Episodes
+		 * TODO change below first tier if to switch case on keywords.length Switch on
+		 * the following Show People (Person?) Seasons Episodes
 		 */
 		if (keywords.length < MINIMUM_ARGUMENTS) {
 			result = MANUAL;
@@ -156,7 +153,7 @@ public class TVserier {
 
 	private void jsonResponse() {
 		String json = linkToAPI + searchValue;
-		JSONCon tvmazeAPI = new JSONCon();		
+		JSONCon tvmazeAPI = new JSONCon();
 		JSONArray responseObjects = (JSONArray) (tvmazeAPI.tryApi(json)).get(0);
 
 		// Picks the first row from the api-response
@@ -164,55 +161,23 @@ public class TVserier {
 		if (isResponseEmpty(responseObject, responseObjects)) {
 			isResultEmpty = true;
 		} else {
-			
-			@SuppressWarnings("unchecked")
-			HashMap<String, String> results = (HashMap<String, String>) ((HashMap<String, Object>)responseObject).clone();
-			
-			Iterator<Map.Entry<String, String>> entries = results.entrySet().iterator();
-			
-			// Iterates through the map to get the information i want
-			while (entries.hasNext()) {
-				Map.Entry<String, String> entry = entries.next();
-				if (isSearchingForShow) {
-					if(entry.getKey().contains(SUMMARY)) {
-						//entry.getValue().toString();
-						//How to get the value for the key of Summary???
-						
-						result = "";
-						isResultEmpty = false;
-						break;
-					}
-				//If you want the result of a search to contain several results (e.g. user entered "tv shows [name of tvseries]"
-				} else if (isSearchingForShows) {
-					for (Object searchResults : responseObjects) {
-						JSONObject o = (JSONObject) searchResults;
-						
-					}
-					isResultEmpty = false;
-				} else if (isSearchingForPeople) {
-					isResultEmpty = false;
-				} else {
-					//Found something else
-					continue; //Until I actually develop the other if cases, this is just here for future reference and plans
-				}
-				// Detta behöver anpassas specifik för vad man har sökt på
-				// if (tv.get("Type").equals("movie"))
-				// jsonValue += tv.get("Title") + ", från " + movie.get("Year") + "; ";
-			}
+			for (Object searchResults : responseObjects) {
+				JSONArray resultsArr = (JSONArray) searchResults;
 
+				Iterator serieItr = resultsArr.iterator();
+
+				// Iterates through the map to get the information i want
+				while (serieItr.hasNext()) {
+					Object slide = serieItr.next();
+					JSONObject serie = (JSONObject) slide;
+					System.out.println(serie.toJSONString());
+					JSONObject showInfo = (JSONObject) serie.get("show");
+					result = showInfo.get("name") + ", har poäng " + serie.get("score") + "; ";
+
+				}
+
+			}
 		}
-	}
-	
-	private String getResultFromHashMap(String input, HashMap<String, String> results) {
-		boolean hasKeyBeenFound = false;
-		String key = "";
-		if(hasKeyBeenFound)			
-			return key;
-		else {
-			
-			getResultFromHashMap(input, results);
-		}
-		return key;
 	}
 
 	private void formatResult(String Sender) {
