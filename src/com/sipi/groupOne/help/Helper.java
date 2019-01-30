@@ -8,6 +8,6 @@ public class Helper {
 
 
     public String getAnswer() {
-        return String.format("En sökning är uppbyggd på följande sätt: <Vad du söker> <Sök-kommando>. " + time + ", " + omdbApi + ", " + tvMaze + ", " + gpsApi);
+        return "En sökning är uppbyggd på följande sätt: <Vad du söker> <Sök-kommando>. " + time + ", " + omdbApi + ", " + tvMaze + ", " + gpsApi;
     }
 }
