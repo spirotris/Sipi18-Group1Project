@@ -7,6 +7,7 @@
 package com.sipi.groupOne.tv;
 
 import java.net.*;
+
 import java.util.Iterator;
 import com.sipi.groupOne.connections.JSONCon;
 import org.json.simple.JSONArray;
@@ -20,7 +21,8 @@ public class TVserier {
 	private static final String EMBED = "&embed=";
 	private static final String SEARCH = "search/";
 	private static final String QUERY = "?q=";
-	private static final String SHOW = "show", SHOWS = "shows", PEOPLE = "people", SUMMARY = "summary";
+	private static final String SHOW = "show", SHOWS = "shows", PEOPLE = "people", PERSON = "person", NAME = "name",
+			SUMMARY = "summary";
 	private static final String MANUAL = "Använder API från " + NAME_OF_API_HOST_SITE
 			+ " för att svara på frågor. Skriv API för länk till den. Exempel på användning: tv show [namn på show] eller tv people [namn på person]";
 	private static final String ERROR_NOT_ENOUGH_KEYWORDS = "Behöver fler nyckelord för att utföra en sökning. Skriv ? eller hjälp för mer inforamtion";
@@ -41,7 +43,7 @@ public class TVserier {
 	private static boolean isSearchingForShow = false;
 	private static boolean isSearchingForShows = false;
 	private static boolean isSearchingForPeople = false;
-
+	
 	public TVserier(String sender, String[] searchValue) {
 
 		try {
@@ -78,13 +80,6 @@ public class TVserier {
 		isSearchingForShow = false;
 		isSearchingForShows = false;
 		isSearchingForPeople = false;
-	}
-
-	private boolean isResponseEmpty(JSONObject responseObject, JSONArray responseObjects) {
-		if (responseObject.isEmpty() || responseObjects.isEmpty())
-			return true;
-		else
-			return false;
 	}
 
 	/**
@@ -154,28 +149,46 @@ public class TVserier {
 	private void jsonResponse() {
 		String json = linkToAPI + searchValue;
 		JSONCon tvmazeAPI = new JSONCon();
-		JSONArray responseObjects = (JSONArray) (tvmazeAPI.tryApi(json)).get(0);
+		JSONArray responseObjects = tvmazeAPI.tryApi(json);
 
-		// Picks the first row from the api-response
-		JSONObject responseObject = (JSONObject) responseObjects.get(0);
-		if (isResponseEmpty(responseObject, responseObjects)) {
+		if (responseObjects.isEmpty()) {
 			isResultEmpty = true;
 		} else {
+			isResultEmpty = false;
+			// Picks the first row from the api-response
 			for (Object searchResults : responseObjects) {
 				JSONArray resultsArr = (JSONArray) searchResults;
 
+				@SuppressWarnings("rawtypes")
 				Iterator serieItr = resultsArr.iterator();
 
 				// Iterates through the map to get the information i want
 				while (serieItr.hasNext()) {
+					
 					Object slide = serieItr.next();
 					JSONObject serie = (JSONObject) slide;
 					System.out.println(serie.toJSONString());
-					JSONObject showInfo = (JSONObject) serie.get("show");
-					result = showInfo.get("name") + ", har poäng " + serie.get("score") + "; ";
-
+					JSONObject showInfo = null;
+					if (isSearchingForShow) {
+						showInfo = (JSONObject) serie.get(SHOW);
+						// Visa en beskrivninga för det bästa träffen av sökresultatet
+						result += showInfo.get(NAME) + ": " + showInfo.get(SUMMARY);
+						result = result.replaceAll("(<.*?>)|(&.*?;)|([ ]{2,})", "");
+						return;
+					} else if (isSearchingForShows) {
+						// Vill man ha flera träffar söker man med "tv shows [namn på serie]"
+						showInfo = (JSONObject) serie.get(SHOWS);
+						result += showInfo.get(NAME) + ", ";
+						break;
+					} else if (isSearchingForPeople) {
+						showInfo = (JSONObject) serie.get(PEOPLE);
+						result += showInfo.get(NAME);
+						break;
+					} else {
+						showInfo = (JSONObject) serie.get(SHOW);
+						result = showInfo.get("name") + ", har poäng " + serie.get("score");
+					}
 				}
-
 			}
 		}
 	}
@@ -186,6 +199,7 @@ public class TVserier {
 		else
 			result = "Hej " + Sender + "! Jag hittade " + result;
 	}
+
 
 	public String getAnswer() {
 		return result;
