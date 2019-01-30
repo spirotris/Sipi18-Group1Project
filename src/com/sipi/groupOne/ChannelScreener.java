@@ -1,5 +1,6 @@
 package com.sipi.groupOne;
 
+import com.sipi.groupOne.help.Helper;
 import com.sipi.groupOne.movie.FetchMovieInfo;
 
 public class ChannelScreener {
@@ -18,6 +19,9 @@ public class ChannelScreener {
                 return movie.getAnswer();
             case "serie":
                 return "Hej " + sender + "! Du sökte på " + msgArray[0]+ " och skrev: " + searchString(msgArray);
+            case "help":
+                Helper helper = new Helper();
+                return "Hej " + sender + "! " + helper.getAnswer();
         }
 
         return null;
