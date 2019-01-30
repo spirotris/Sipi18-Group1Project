@@ -1,26 +1,22 @@
 package com.sipi.groupOne;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import com.sipi.groupOne.ui.MainFrame;
 import java.io.IOException;
-import java.io.PrintStream;
 import org.jibble.pircbot.*;
 
 public class BotProject extends PircBot {
 
-    private PrintStream ps;
-
-    public BotProject(String server, String nickname, String channel, boolean log) {
-        if (log) {
-            try {
-                System.setOut(new PrintStream(new File("logs/log.txt")));
-            } catch (FileNotFoundException e) {
-                System.err.println("Unable to create logfile");
-                System.err.println(e.getLocalizedMessage());
-            }
-        }
-
+    private MainFrame ui;
+    
+    public BotProject(String server, String nickname, String channel) {
+        // Launching GUI
+        ui = new MainFrame(this);
+        ui.run();
+        
+        // Setup and start bot
         this.setName(nickname);
+        this.setAutoNickChange(true);
+        this.setLogin("botProject");
         this.setVerbose(true);
         try {
             this.connect(server);
@@ -44,4 +40,11 @@ public class BotProject extends PircBot {
             sendMessage(channel, searchResult);
         }
     }
+
+    @Override
+    protected void onUserList(String channel, User[] users) {
+        ui.updateUserList();
+    }
+    
+    
 }
