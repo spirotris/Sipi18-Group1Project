@@ -1,6 +1,8 @@
 package com.sipi.groupOne;
 
 import com.sipi.groupOne.movie.FetchMovieInfo;
+import com.sipi.groupOne.train.FetchStationInfo;
+import com.sipi.groupOne.train.FetchTrainInfo;
 
 public class ChannelScreener {
 
@@ -16,8 +18,13 @@ public class ChannelScreener {
                 // To call the omdb api and get some movie-info
                 FetchMovieInfo movie = new FetchMovieInfo(sender, searchString(msgArray));
                 return movie.getAnswer();
-            case "serie":
-                return "Hej " + sender + "! Du sökte på " + msgArray[0]+ " och skrev: " + searchString(msgArray);
+            case "station":
+                // To call the api from Trafikverket to get a train-stations departure information
+                FetchStationInfo station = new FetchStationInfo(sender, searchString(msgArray));
+                return station.getAnswer();
+            case "train":
+                FetchTrainInfo train = new FetchTrainInfo();
+                return train.getAnswer();
         }
 
         return null;

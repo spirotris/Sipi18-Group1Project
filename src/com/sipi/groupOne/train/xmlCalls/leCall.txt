@@ -1,0 +1,25 @@
+<REQUEST>
+  <LOGIN authenticationkey="6303830c40c8444aa528618c9ffac0d3" />
+  <QUERY objecttype="TrainAnnouncement" orderby="AdvertisedTimeAtLocation">
+    <FILTER>
+      <AND>
+        <EQ name="ActivityType" value="Avgang" />
+        <EQ name="LocationSignature" value="le" />
+        <OR>
+          <AND>
+            <GT name="AdvertisedTimeAtLocation" value="$dateadd(-00:15:00)" />
+            <LT name="AdvertisedTimeAtLocation" value="$dateadd(14:00:00)" />
+          </AND>
+          <AND>
+            <LT name="AdvertisedTimeAtLocation" value="$dateadd(00:30:00)" />
+            <GT name="EstimatedTimeAtLocation" value="$dateadd(-00:15:00)" />
+          </AND>
+        </OR>
+      </AND>
+    </FILTER>
+    <INCLUDE>AdvertisedTrainIdent</INCLUDE>
+    <INCLUDE>AdvertisedTimeAtLocation</INCLUDE>
+    <INCLUDE>TrackAtLocation</INCLUDE>
+    <INCLUDE>ToLocation</INCLUDE>
+  </QUERY>
+</REQUEST>
