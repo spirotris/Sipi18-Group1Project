@@ -10,7 +10,7 @@ import org.jibble.pircbot.User;
 public class MainFrame extends javax.swing.JFrame implements Runnable {
 
     private BotProject bot;
-    
+
     /**
      * Creates new form MainFrame
      */
@@ -124,7 +124,7 @@ public class MainFrame extends javax.swing.JFrame implements Runnable {
     }//GEN-LAST:event_inputTextActionPerformed
 
     private void inputTextKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inputTextKeyPressed
-        if(evt.getKeyCode()==KeyEvent.VK_ENTER) {
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             this.sendButton.doClick();
         }
     }//GEN-LAST:event_inputTextKeyPressed
@@ -172,7 +172,7 @@ public class MainFrame extends javax.swing.JFrame implements Runnable {
         }
         userList.setModel(dlm);
     }
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea chatWindow;
     private javax.swing.JButton disconnectButton;
