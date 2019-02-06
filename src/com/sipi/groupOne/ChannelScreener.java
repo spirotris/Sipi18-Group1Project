@@ -1,9 +1,6 @@
 package com.sipi.groupOne;
 
 import com.sipi.groupOne.movie.FetchMovieInfo;
-import com.sipi.groupOne.test.FetchGPS;
-import com.sipi.groupOne.test.FetchTV;
-import com.sipi.groupOne.tv.TVserier;
 
 public class ChannelScreener {
 
@@ -20,15 +17,9 @@ public class ChannelScreener {
                 FetchMovieInfo movie = new FetchMovieInfo(sender, searchString(msgArray));
                 return movie.getAnswer();
             case "serie":
-                FetchTV serie = new FetchTV(sender, searchString(msgArray));
-                return serie.getAnswer();
-            case "gps":
-                FetchGPS gps = new FetchGPS(sender,searchString(msgArray));
-                return gps.getAnswer();
-            case "!tv":
-            	TVserier tv = new TVserier(sender, msgArray);
-                return tv.getAnswer();
+                return "Hej " + sender + "! Du sökte på " + msgArray[0]+ " och skrev: " + searchString(msgArray);
         }
+
         return null;
     }
 
