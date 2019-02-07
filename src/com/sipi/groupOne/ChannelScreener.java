@@ -1,7 +1,8 @@
 package com.sipi.groupOne;
 
 import com.sipi.groupOne.movie.FetchMovieInfo;
-import com.sipi.groupOne.test.FetchGPS;
+//import com.sipi.groupOne.test.FetchGPS;
+import com.sipi.groupOne.gps.GetGPS;
 import com.sipi.groupOne.test.FetchTV;
 import com.sipi.groupOne.tv.TVserier;
 
@@ -23,8 +24,8 @@ public class ChannelScreener {
                 FetchTV serie = new FetchTV(sender, searchString(msgArray));
                 return serie.getAnswer();
             case "gps":
-                FetchGPS gps = new FetchGPS(sender,searchString(msgArray));
-                return gps.getAnswer();
+                GetGPS gps = new GetGPS(sender,searchString(msgArray));
+                return gps.getInfo();
             case "!tv":
             	TVserier tv = new TVserier(sender, msgArray);
                 return tv.getAnswer();

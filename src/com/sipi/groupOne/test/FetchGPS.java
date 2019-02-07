@@ -28,7 +28,7 @@ public class FetchGPS {
 
     // Get information from the api using JSONCon
     private void initJSON() {
-        String json = "https://freegeoip.app/json/8.8.8.8";
+        String json = "https://freegeoip.app/json/";
         JSONCon gpsApi = new JSONCon();
 
         JSONArray responseObjects = gpsApi.tryApi(json);
