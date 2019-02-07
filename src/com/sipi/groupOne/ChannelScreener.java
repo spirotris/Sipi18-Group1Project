@@ -1,10 +1,11 @@
 package com.sipi.groupOne;
 
 import com.sipi.groupOne.movie.FetchMovieInfo;
-//import com.sipi.groupOne.test.FetchGPS;
 import com.sipi.groupOne.gps.GetGPS;
 import com.sipi.groupOne.test.FetchTV;
 import com.sipi.groupOne.tv.TVserier;
+
+
 
 public class ChannelScreener {
 
@@ -20,16 +21,12 @@ public class ChannelScreener {
                 // To call the omdb api and get some movie-info
                 FetchMovieInfo movie = new FetchMovieInfo(sender, searchString(msgArray));
                 return movie.getAnswer();
-            case "serie":
-                FetchTV serie = new FetchTV(sender, searchString(msgArray));
-                return serie.getAnswer();
             case "gps":
                 GetGPS gps = new GetGPS(sender,searchString(msgArray));
                 return gps.getInfo();
-            case "!tv":
-            	TVserier tv = new TVserier(sender, msgArray);
-                return tv.getAnswer();
+           
         }
+
         return null;
     }
 
