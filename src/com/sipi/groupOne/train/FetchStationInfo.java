@@ -9,6 +9,7 @@ import org.json.simple.JSONObject;
 import java.io.*;
 import java.util.Iterator;
 
+// Getting departures from Luleå-station from the API of Trafikverket
 public class FetchStationInfo {
     private String APIUrl = "http://api.trafikinfo.trafikverket.se/v1.3/data.json";
     private File tempFile;
@@ -19,9 +20,11 @@ public class FetchStationInfo {
 
     private StringBuilder jsonValue;
 
+    // Constructor
     public FetchStationInfo(String sender, String searchValue) {
         SENDER = sender;
         SEARCHVALUE = searchValue;
+        // Checking if the XML-file exists using init()
         if(init()) {
             sendRequest();
         } else {
@@ -29,6 +32,7 @@ public class FetchStationInfo {
         }
     }
 
+    // Checking if requested file exists
     private boolean init() {
         try{
             tempFile = new File(fileToSend);
@@ -39,9 +43,14 @@ public class FetchStationInfo {
         }
     }
 
+    // Sending the request from the XML-file and getting the information requested from the response
     private void sendRequest() {
+        // Generating the connection to the api
         XMLtoJSONCon apiCon = new XMLtoJSONCon();
+        // Getting the response using choosen parameters
         JSONArray responseObjects = apiCon.tryApi(APIUrl,fileToSend);
+
+        // Starting to work with the response
         JSONObject jObject = (JSONObject) responseObjects.get(0);
 
         JSONObject responseObj = (JSONObject)jObject.get("RESPONSE");

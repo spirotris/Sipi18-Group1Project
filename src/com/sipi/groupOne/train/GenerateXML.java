@@ -20,6 +20,7 @@ import java.io.IOException;
 class GenerateXML {
     private static String auth;
 
+    // Trying to load the address for the api
     private static boolean initAuth() {
         try {
             File key = new File("src/com/sipi/groupOne/train/application.properties");
