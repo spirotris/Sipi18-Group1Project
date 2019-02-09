@@ -22,18 +22,15 @@ public class GetGPS {
 
     public GetGPS(String sender, String hostname) {
         USER = sender;
-        System.out.println("hostname: " + hostname);
         try {
             HOST = InetAddress.getByName(hostname).getHostAddress();
         } catch (UnknownHostException e) {
-            System.out.println(e.getLocalizedMessage());
+            System.err.println(e.getLocalizedMessage());
             outputMsg.append("");
             return;
         }
-        System.out.println("host: " + HOST);
 
         try {
-
             OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder()
                     .url("https://freegeoip.app/json/" + HOST)
@@ -45,7 +42,6 @@ public class GetGPS {
             String jsonStr = response.body().string();
 
             JSONObject jsonObj = (JSONObject) new JSONParser().parse(jsonStr);
-            System.out.println("response: " + response);
 
             outputMsg.append("Hej ").append(USER)
                     .append(", Du har IP :").append(jsonObj.get("ip"))
@@ -55,7 +51,7 @@ public class GetGPS {
                     .append(" med postnummer ").append(jsonObj.get("zip_code"));
 
         } catch (ParseException | IOException e) {
-            System.out.println(e.getMessage());
+            System.err.println(e.getLocalizedMessage());
         }
     }
 
