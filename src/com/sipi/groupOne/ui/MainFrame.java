@@ -4,21 +4,23 @@ import com.sipi.groupOne.BotProject;
 import java.awt.event.KeyEvent;
 import java.io.PrintStream;
 import javax.swing.DefaultListModel;
+import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import org.jibble.pircbot.User;
 
 public class MainFrame extends javax.swing.JFrame implements Runnable {
 
     private BotProject bot;
+    private Thread botThread;
 
     /**
      * Creates new form MainFrame
      */
-    public MainFrame(BotProject bot) {
+    public MainFrame() {
         initComponents();
-        this.bot = bot;
-        PrintStream printStream = new PrintStream(new MainTextOutputStream(chatWindow));
-        System.setOut(printStream);
+        botThread = new Thread(this.bot = new BotProject("port80a.se.quakenet.org", "Anna", "#group1-lernia", this));
+        //PrintStream printStream = new PrintStream(new MainTextOutputStream(chatWindow));
+        //System.setOut(printStream);
     }
 
     /**
@@ -78,13 +80,13 @@ public class MainFrame extends javax.swing.JFrame implements Runnable {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(inputText)
+                        .addComponent(inputText, javax.swing.GroupLayout.DEFAULT_SIZE, 630, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(sendButton))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 707, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 701, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -116,7 +118,8 @@ public class MainFrame extends javax.swing.JFrame implements Runnable {
     private void sendButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendButtonActionPerformed
         String message = inputText.getText();
         inputText.setText("");
-        bot.sendMessage(bot.getChannels()[0], message);
+        chatWindow.append("bot.getChannesl()[0]: "+bot.getChannels()[0]+"\n");
+        //bot.sendMessage(bot.getChannels()[0], message);
     }//GEN-LAST:event_sendButtonActionPerformed
 
     private void inputTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inputTextActionPerformed
@@ -158,19 +161,24 @@ public class MainFrame extends javax.swing.JFrame implements Runnable {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                new MainFrame(bot).setVisible(true);
+                botThread.start();
+                new MainFrame().setVisible(true);
             }
         });
     }
 
-    /// TODO: FIX, DOESN'T UPDATE!
+    /// TODO: FIX, DOESN'T UPDATE PROPERLY!
     public void updateUserList() {
-        User[] users = bot.getUsers("#group1-lernia");
+        User[] users = bot.getUsers(bot.getChannels()[0]);
         DefaultListModel dlm = new DefaultListModel();
         for (int i = 0; i < users.length; i++) {
             dlm.add(i, users[i].getNick());
         }
         userList.setModel(dlm);
+    }
+    
+    public JTextArea getTextArea() {
+        return chatWindow;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

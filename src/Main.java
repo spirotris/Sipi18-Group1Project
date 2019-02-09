@@ -1,8 +1,11 @@
 import com.sipi.groupOne.*;
+import com.sipi.groupOne.ui.MainFrame;
 
 public class Main {
 
     public static void main(String[] args) {
-        BotProject bot = new BotProject("port80a.se.quakenet.org", "Anna", "#group1-lernia");
+        // String[] args for cmdline or GUI?
+        MainFrame ui = new MainFrame();
+        ui.run();
     }
 }
