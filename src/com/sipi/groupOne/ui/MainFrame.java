@@ -2,25 +2,26 @@ package com.sipi.groupOne.ui;
 
 import com.sipi.groupOne.BotProject;
 import java.awt.event.KeyEvent;
-import java.io.PrintStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import javax.swing.DefaultListModel;
-import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import org.jibble.pircbot.User;
 
-public class MainFrame extends javax.swing.JFrame implements Runnable {
+public class MainFrame extends javax.swing.JFrame {
 
     private BotProject bot;
-    private Thread botThread;
 
     /**
      * Creates new form MainFrame
+     *
+     * @param bot - BotProject model
      */
-    public MainFrame() {
+    public MainFrame(BotProject bot) {
         initComponents();
-        botThread = new Thread(this.bot = new BotProject("port80a.se.quakenet.org", "Anna", "#group1-lernia", this));
-        //PrintStream printStream = new PrintStream(new MainTextOutputStream(chatWindow));
-        //System.setOut(printStream);
+        this.setTitle("PircBot : " + bot.getNick() + " @ " + bot.getChannel());
+        this.setVisible(true);
+        this.bot = bot;
     }
 
     /**
@@ -42,6 +43,7 @@ public class MainFrame extends javax.swing.JFrame implements Runnable {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        chatWindow.setEditable(false);
         chatWindow.setColumns(20);
         chatWindow.setLineWrap(true);
         chatWindow.setRows(5);
@@ -64,11 +66,6 @@ public class MainFrame extends javax.swing.JFrame implements Runnable {
 
         jScrollPane2.setViewportView(userList);
 
-        inputText.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                inputTextActionPerformed(evt);
-            }
-        });
         inputText.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 inputTextKeyPressed(evt);
@@ -112,19 +109,26 @@ public class MainFrame extends javax.swing.JFrame implements Runnable {
     }// </editor-fold>//GEN-END:initComponents
 
     private void disconnectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_disconnectButtonActionPerformed
-        bot.disconnect();
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                bot.disconnect();
+            }
+        });
     }//GEN-LAST:event_disconnectButtonActionPerformed
 
     private void sendButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendButtonActionPerformed
-        String message = inputText.getText();
+        /*SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                bot.sendMessage(bot.getChannel(), inputText.getText());
+                inputText.setText("");
+            }
+        });*/
+        setChatMessage(bot.getNick(), inputText.getText());
+        bot.sendMessage(bot.getChannel(), inputText.getText());
         inputText.setText("");
-        chatWindow.append("bot.getChannesl()[0]: "+bot.getChannels()[0]+"\n");
-        //bot.sendMessage(bot.getChannels()[0], message);
     }//GEN-LAST:event_sendButtonActionPerformed
-
-    private void inputTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inputTextActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_inputTextActionPerformed
 
     private void inputTextKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inputTextKeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
@@ -132,53 +136,43 @@ public class MainFrame extends javax.swing.JFrame implements Runnable {
         }
     }//GEN-LAST:event_inputTextKeyPressed
 
-    @Override
-    public void run() {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(MainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(MainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(MainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(MainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
+    /// TODO: FIX, DOESN'T UPDATE PROPERLY!
+    public void updateUserList() {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                botThread.start();
-                new MainFrame().setVisible(true);
+                User[] users = bot.getUsers(bot.getChannels()[0]);
+                DefaultListModel dlm = new DefaultListModel();
+                for (int i = 0; i < users.length; i++) {
+                    dlm.add(i, users[i].getNick());
+
+                }
+                userList.setModel(dlm);
             }
         });
+
     }
 
-    /// TODO: FIX, DOESN'T UPDATE PROPERLY!
-    public void updateUserList() {
-        User[] users = bot.getUsers(bot.getChannels()[0]);
-        DefaultListModel dlm = new DefaultListModel();
-        for (int i = 0; i < users.length; i++) {
-            dlm.add(i, users[i].getNick());
+    public void setChatMessage(String user, String msg) {
+        String timestamp = new SimpleDateFormat("HH.mm.ss").format(new Date());
+        String message = timestamp + " <" + user + "> " + msg + "\n";
+        if (chatWindow.getText().isEmpty()) {
+            chatWindow.setText(message);
+        } else {
+            chatWindow.append(message);
         }
-        userList.setModel(dlm);
+        chatWindow.setCaretPosition(chatWindow.getDocument().getLength());
     }
-    
-    public JTextArea getTextArea() {
-        return chatWindow;
+
+    public void setMessage(String msg) {
+        String timestamp = new SimpleDateFormat("HH.mm.ss").format(new Date());
+        String message = timestamp + " * " + msg + "\n";
+        if (chatWindow.getText().isEmpty()) {
+            chatWindow.setText(message);
+        } else {
+            chatWindow.append(message);
+        }
+        chatWindow.setCaretPosition(chatWindow.getDocument().getLength());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
