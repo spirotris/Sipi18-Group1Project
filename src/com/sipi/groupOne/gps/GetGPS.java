@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.sipi.groupOne.gps;
 
 /**
@@ -10,73 +5,66 @@ package com.sipi.groupOne.gps;
  * @author mbutt
  */
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.json.simple.JSONObject;
-//import org.json.simple.JSONArray;
+import org.json.simple.parser.ParseException;
 
 public class GetGPS {
-    
-  OkHttpClient client = new OkHttpClient();
-  
-  String run(String url) throws IOException {
-    Request request = new Request.Builder()
-        .url(url)
-        .build();
 
-    try (Response response = client.newCall(request).execute()) {
-      return response.body().string();
-    }
-  }
-  
-  private String jsonvalue;
-  private String SEARCHVALUE;
-  private String SENDER;
-  private boolean run = false;
-  
-  // Contructor
-    public GetGPS(){
-        
-    }
-  
-    public GetGPS(String sender, String searchValue) {
-        SEARCHVALUE = searchValue;
-        SENDER = sender;
-        
-        if(!run == true){
-            run = true;
-            GPSinfo();
+    private StringBuilder outputMsg = new StringBuilder();
+    private String USER;
+    private String HOST;
+
+    public GetGPS(String sender, String hostname) {
+        USER = sender;
+        System.out.println("hostname: " + hostname);
+        try {
+            HOST = InetAddress.getByName(hostname).getHostAddress();
+        } catch (UnknownHostException e) {
+            System.out.println(e.getLocalizedMessage());
+            outputMsg.append("");
+            return;
+        }
+        System.out.println("host: " + HOST);
+
+        try {
+
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder()
+                    .url("https://freegeoip.app/json/" + HOST)
+                    .get()
+                    .addHeader("accept", "application/json")
+                    .addHeader("content-type", "application/json")
+                    .build();
+            Response response = client.newCall(request).execute();
+            String jsonStr = response.body().string();
+
+            JSONObject jsonObj = (JSONObject) new JSONParser().parse(jsonStr);
+            System.out.println("response: " + response);
+
+            outputMsg.append("Hej ").append(USER)
+                    .append(", Du har IP :").append(jsonObj.get("ip"))
+                    .append(", bor i landet ").append(jsonObj.get("country_name"))
+                    .append(" i regionen ").append(jsonObj.get("region_name"))
+                    .append(" i staden ").append(jsonObj.get("city"))
+                    .append(" med postnummer ").append(jsonObj.get("zip_code"));
+
+        } catch (ParseException | IOException e) {
+            System.out.println(e.getMessage());
         }
     }
-  
-    
-    // public String
-  private void GPSinfo(){
-   //GetGPS example = new GetGPS(SENDER,SEARCHVALUE);
-    GetGPS example = new GetGPS();
-    JSONParser parser = new JSONParser();
-    try{
 
-    //Assigns the json out in a string variabel "response"    
-    String response = example.run("https://freegeoip.app/json/");
-    
-    //Pasring the JSON string into a JSON Object 
-    JSONObject jsobjt = (JSONObject)parser.parse(response);
- 
-    jsonvalue = ("Hej "+SENDER+ ", Du har IP :"+jsobjt.get("ip")+", bor i landet "+jsobjt.get("country_name")
-                +" i regionen "+jsobjt.get("region_name")+" i staden "+jsobjt.get("city")
-                +" med postnummer "+jsobjt.get("zip_code"));
- 
-    }catch(ParseException | IOException e){
-        System.out.println(e.getMessage());  
-    }
-  }
-    
     public String getInfo() {
-        
-        return jsonvalue;
+        if (!outputMsg.toString().isEmpty()) {
+            return outputMsg.toString();
+        } else {
+            return "Unable to find GPS information.";
+        }
+
     }
 }
