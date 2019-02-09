@@ -1,7 +1,6 @@
 package com.sipi.groupOne;
 
 import com.sipi.groupOne.ui.MainFrame;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -23,7 +22,7 @@ public class BotProject extends PircBot implements Runnable {
         this.setVerbose(true);
         if (saveLog) {
             try {
-                String todaysDate = new SimpleDateFormat("DD.MM").format(new Date());
+                String todaysDate = new SimpleDateFormat("d.M").format(new Date());
                 String fileName = "irclog-" + todaysDate + ".log";
                 PrintStream fs = new PrintStream(fileName);
                 System.setOut(fs);
@@ -36,10 +35,11 @@ public class BotProject extends PircBot implements Runnable {
     @Override
     public void onMessage(String channel, String sender,
             String login, String hostname, String message) {
-        String searchResult = ChannelScreener.message(sender, message);
+        String searchResult = ChannelScreener.message(sender, hostname, message);
         ui.setChatMessage(sender, message);
         if (searchResult != null) {
             sendMessage(channel, searchResult);
+            ui.setChatMessage(this.getNick(), searchResult);
         }
     }
 
