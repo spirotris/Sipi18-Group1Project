@@ -22,13 +22,14 @@ public class TVserier {
 	private static final String SEARCH = "search/";
 	private static final String QUERY = "?q=";
 	private static final String SHOW = "show", SHOWS = "shows", PEOPLE = "people", PERSON = "person", NAME = "name",
-			SUMMARY = "summary";
+			SUMMARY = "summary", SINGLE_SEARCH = "single";
 	private static final String MANUAL = "Använder API från " + NAME_OF_API_HOST_SITE
 			+ " för att svara på frågor. Skriv API för länk till den. Exempel på användning: tv show [namn på show] eller tv people [namn på person]";
 	private static final String ERROR_NOT_ENOUGH_KEYWORDS = "Behöver fler nyckelord för att utföra en sökning. Skriv ? eller hjälp för mer inforamtion";
 	private static final String SHOW_MANUAL = "?", SHOW_MANUAL2 = "help";
 	private static final String EMPTY_RESULT = "Jag fick inga svar med den sökningen!";
 	private static final String TOO_MANY_PARAMETERS = "För många nyckelord eller så har jag inte stöd för dessa ord";
+	private static final String REMOVE_HTML_REGEX = "(<.*?>)|(&.*?;)|([ ]{2,})";
 
 	private static final int FIRST_ARGUMENT = 1, SECOND_ARGUMENT = 2, THIRD_ARGUMENT = 3, FOURTH_ARGUMENT = 4,
 			MINIMUM_ARGUMENTS = 2, MIDDLE_VALUE_ARGUMENTS = 3, MAXIMUM_ARGUMENTS = 4;
@@ -43,7 +44,8 @@ public class TVserier {
 	private static boolean isSearchingForShow = false;
 	private static boolean isSearchingForShows = false;
 	private static boolean isSearchingForPeople = false;
-	
+	private static boolean isSearchingForMultiple = false;
+
 	public TVserier(String sender, String[] searchValue) {
 
 		try {
@@ -80,6 +82,7 @@ public class TVserier {
 		isSearchingForShow = false;
 		isSearchingForShows = false;
 		isSearchingForPeople = false;
+		isSearchingForMultiple = false;
 	}
 
 	/**
@@ -115,21 +118,25 @@ public class TVserier {
 			if (keywords[FIRST_ARGUMENT].toLowerCase().equals(SHOW)) {
 				// If entered string is something like [name of tv series] then return URL for
 				// that series
-				searchValue = SEARCH + SHOWS + QUERY + keywords[SECOND_ARGUMENT];
+				searchValue = SINGLE_SEARCH + SEARCH + SHOWS + QUERY + keywords[SECOND_ARGUMENT];
 				isSearchValid = true;
 				isAskingForManual = false;
 				isSearchingForShow = true;
+				isSearchingForMultiple = false;
 				return;
 			} else if (keywords[FIRST_ARGUMENT].toLowerCase().contains(SHOWS)) {
 				isSearchValid = true;
 				isAskingForManual = false;
 				isSearchingForShows = true;
+				isSearchingForMultiple = true;
 				return;
 
-			} else if (keywords[FIRST_ARGUMENT].toLowerCase().contains(PEOPLE)) {
+			} else if (keywords[FIRST_ARGUMENT].toLowerCase().contains(PEOPLE)
+					|| keywords[FIRST_ARGUMENT].toLowerCase().contains(PERSON)) {
 				searchValue = SEARCH + PEOPLE + QUERY + keywords[SECOND_ARGUMENT];
 				isSearchValid = true;
 				isAskingForManual = false;
+				isSearchingForMultiple = true;
 				return;
 			}
 
@@ -146,6 +153,7 @@ public class TVserier {
 
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void jsonResponse() {
 		String json = linkToAPI + searchValue;
 		JSONCon tvmazeAPI = new JSONCon();
@@ -157,36 +165,44 @@ public class TVserier {
 			isResultEmpty = false;
 			// Picks the first row from the api-response
 			for (Object searchResults : responseObjects) {
-				JSONArray resultsArr = (JSONArray) searchResults;
+				JSONArray resultsArr = null;
+				JSONObject resultObj;
 
-				@SuppressWarnings("rawtypes")
-				Iterator serieItr = resultsArr.iterator();
+				Iterator serieItr;
+
+				if (isSearchingForMultiple) {
+					resultsArr = (JSONArray) searchResults;
+					serieItr = resultsArr.iterator();
+				} else {
+					resultObj = (JSONObject) searchResults;
+					resultsArr = new JSONArray();
+					resultsArr.add(resultObj);
+					serieItr = resultsArr.iterator();
+				}
 
 				// Iterates through the map to get the information i want
 				while (serieItr.hasNext()) {
-					
+
 					Object slide = serieItr.next();
 					JSONObject serie = (JSONObject) slide;
 					System.out.println(serie.toJSONString());
-					JSONObject showInfo = null;
 					if (isSearchingForShow) {
-						showInfo = (JSONObject) serie.get(SHOW);
-						// Visa en beskrivninga för det bästa träffen av sökresultatet
-						result += showInfo.get(NAME) + ": " + showInfo.get(SUMMARY);
-						result = result.replaceAll("(<.*?>)|(&.*?;)|([ ]{2,})", "");
+						// Visar serien och en beskrivninga för bästa träffen av sökresultatet
+						result += serie.get(NAME) + ": " + serie.get(SUMMARY);
+						result = result.replaceAll(REMOVE_HTML_REGEX, "");
 						return;
 					} else if (isSearchingForShows) {
 						// Vill man ha flera träffar söker man med "tv shows [namn på serie]"
-						showInfo = (JSONObject) serie.get(SHOWS);
-						result += showInfo.get(NAME) + ", ";
+						result += (JSONObject) serie.get(SHOWS);
+						result += serie.get(NAME) + ", ";
 						break;
 					} else if (isSearchingForPeople) {
-						showInfo = (JSONObject) serie.get(PEOPLE);
-						result += showInfo.get(NAME);
+						result += (JSONObject) serie.get(PEOPLE);
+						result += serie.get(NAME);
 						break;
 					} else {
-						showInfo = (JSONObject) serie.get(SHOW);
-						result = showInfo.get("name") + ", har poäng " + serie.get("score");
+						result += (JSONObject) serie.get(SHOW);
+						result = serie.get("name") + ", har poäng " + serie.get("score");
 					}
 				}
 			}
@@ -199,7 +215,6 @@ public class TVserier {
 		else
 			result = "Hej " + Sender + "! Jag hittade " + result;
 	}
-
 
 	public String getAnswer() {
 		return result;
