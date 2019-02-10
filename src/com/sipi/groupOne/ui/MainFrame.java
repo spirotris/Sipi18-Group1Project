@@ -19,6 +19,7 @@ public class MainFrame extends javax.swing.JFrame {
      */
     public MainFrame(BotProject bot) {
         initComponents();
+        launchGUI.CenteredFrame(this);
         this.setTitle("PircBot : " + bot.getNick() + " @ " + bot.getChannel());
         this.setVisible(true);
         this.bot = bot;
