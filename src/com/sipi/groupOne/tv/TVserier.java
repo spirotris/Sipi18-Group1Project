@@ -31,8 +31,8 @@ public class TVserier {
 	private static final String TOO_MANY_PARAMETERS = "För många nyckelord eller så har jag inte stöd för dessa ord";
 	private static final String REMOVE_HTML_REGEX = "(<.*?>)|(&.*?;)|([ ]{2,})";
 
-	private static final int FIRST_ARGUMENT = 1, SECOND_ARGUMENT = 2, THIRD_ARGUMENT = 3, FOURTH_ARGUMENT = 4,
-			MINIMUM_ARGUMENTS = 2, MIDDLE_VALUE_ARGUMENTS = 3, MAXIMUM_ARGUMENTS = 4;
+	private static final int FIRST_ARGUMENT = 1, SECOND_ARGUMENT = 2, MINIMUM_ARGUMENTS = 2, MIDDLE_VALUE_ARGUMENTS = 3,
+			MAXIMUM_ARGUMENTS = 4, MAXIMUM_NUMBER_OF_RESULTS = 10;
 
 	private static String searchValue = "";
 	private static String result = "";
@@ -125,6 +125,7 @@ public class TVserier {
 				isSearchingForMultiple = false;
 				return;
 			} else if (keywords[FIRST_ARGUMENT].toLowerCase().contains(SHOWS)) {
+				searchValue = SEARCH + SHOWS + QUERY + keywords[SECOND_ARGUMENT];
 				isSearchValid = true;
 				isAskingForManual = false;
 				isSearchingForShows = true;
@@ -159,16 +160,17 @@ public class TVserier {
 		JSONCon tvmazeAPI = new JSONCon();
 		JSONArray responseObjects = tvmazeAPI.tryApi(json);
 
-		if (responseObjects.isEmpty()) {
+		if (responseObjects.isEmpty() || responseObjects == null) {
 			isResultEmpty = true;
+			return;
 		} else {
 			isResultEmpty = false;
 			// Picks the first row from the api-response
 			for (Object searchResults : responseObjects) {
 				JSONArray resultsArr = null;
 				JSONObject resultObj;
-
 				Iterator serieItr;
+				int nrOfResultsCounted = 0;
 
 				if (isSearchingForMultiple) {
 					resultsArr = (JSONArray) searchResults;
@@ -193,16 +195,28 @@ public class TVserier {
 						return;
 					} else if (isSearchingForShows) {
 						// Vill man ha flera träffar söker man med "tv shows [namn på serie]"
-						result += (JSONObject) serie.get(SHOWS);
-						result += serie.get(NAME) + ", ";
-						break;
+						if (!result.isEmpty())
+							result += ", ";
+
+						JSONObject nameOfShow = (JSONObject) serie.get(SHOW);
+						result += nameOfShow.get(NAME);
+						nrOfResultsCounted++;
+						if (nrOfResultsCounted == MAXIMUM_NUMBER_OF_RESULTS)
+							return;
+						continue;
 					} else if (isSearchingForPeople) {
-						result += (JSONObject) serie.get(PEOPLE);
-						result += serie.get(NAME);
-						break;
+						/*
+						if (!result.isEmpty())
+							result += ", ";
+						JSONObject nameOfPerson = (JSONObject) serie.get(PEOPLE);
+						result += nameOfPerson.get(NAME);
+						nrOfResultsCounted++;
+						if (nrOfResultsCounted == MAXIMUM_NUMBER_OF_RESULTS)
+							return;
+						continue;
+						*/
 					} else {
-						result += (JSONObject) serie.get(SHOW);
-						result = serie.get("name") + ", har poäng " + serie.get("score");
+						result = "Detta kommando stöds inte";
 					}
 				}
 			}
