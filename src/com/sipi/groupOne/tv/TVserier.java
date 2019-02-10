@@ -31,8 +31,8 @@ public class TVserier {
 	private static final String TOO_MANY_PARAMETERS = "För många nyckelord eller så har jag inte stöd för dessa ord";
 	private static final String REMOVE_HTML_REGEX = "(<.*?>)|(&.*?;)|([ ]{2,})";
 
-	private static final int FIRST_ARGUMENT = 1, SECOND_ARGUMENT = 2, MINIMUM_ARGUMENTS = 2, MIDDLE_VALUE_ARGUMENTS = 3,
-			MAXIMUM_ARGUMENTS = 4, MAXIMUM_NUMBER_OF_RESULTS = 10;
+	private static final int FIRST_ARGUMENT = 1, SECOND_ARGUMENT = 2, THIRD_ARGUMENT = 3, MINIMUM_ARGUMENTS = 2,
+			MIDDLE_VALUE_ARGUMENTS = 3, MAXIMUM_ARGUMENTS = 4, MAXIMUM_NUMBER_OF_RESULTS = 10;
 
 	private static String searchValue = "";
 	private static String result = "";
@@ -140,6 +140,10 @@ public class TVserier {
 			}
 			break;
 		case MAXIMUM_ARGUMENTS:
+			if (keywords[FIRST_ARGUMENT].toLowerCase().contains(PEOPLE)
+					|| keywords[FIRST_ARGUMENT].toLowerCase().contains(PERSON)) {
+				searchValue = SEARCH + PEOPLE + QUERY + keywords[SECOND_ARGUMENT];
+			}
 			// TODO När kommer den hit och hur ser det anropet ut, kanske med people?
 			searchValue += keywords[FIRST_ARGUMENT].toLowerCase() + EMBED + keywords[SECOND_ARGUMENT];
 			isSearchValid = true;
@@ -204,11 +208,16 @@ public class TVserier {
 							return;
 						continue;
 					} else if (isSearchingForPeople) {
-						/*
-						 * if (!result.isEmpty()) result += ", "; JSONObject nameOfPerson = (JSONObject)
-						 * serie.get(PEOPLE); result += nameOfPerson.get(NAME); nrOfResultsCounted++; if
-						 * (nrOfResultsCounted == MAXIMUM_NUMBER_OF_RESULTS) return; continue;
-						 */
+
+						if (!result.isEmpty())
+							result += ", ";
+						JSONObject nameOfPerson = (JSONObject) serie.get(PEOPLE);
+						result += nameOfPerson.get(NAME);
+						nrOfResultsCounted++;
+						if (nrOfResultsCounted == MAXIMUM_NUMBER_OF_RESULTS)
+							return;
+						continue;
+
 					} else {
 						result = "Detta kommando stöds inte";
 					}
