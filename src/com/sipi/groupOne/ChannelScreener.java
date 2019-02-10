@@ -15,7 +15,6 @@ public class ChannelScreener {
             case "gps":
                 return new GetGPS(sender, hostname).getInfo();
         }
-
         return null;
     }
 

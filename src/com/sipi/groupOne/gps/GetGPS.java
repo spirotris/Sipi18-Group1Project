@@ -25,7 +25,7 @@ public class GetGPS {
         try {
             HOST = InetAddress.getByName(hostname).getHostAddress();
         } catch (UnknownHostException e) {
-            System.err.println(e.getLocalizedMessage());
+            System.err.println("UnknownHostException: " + e.getLocalizedMessage());
             outputMsg.append("");
             return;
         }
@@ -51,7 +51,7 @@ public class GetGPS {
                     .append(" med postnummer ").append(jsonObj.get("zip_code"));
 
         } catch (ParseException | IOException e) {
-            System.err.println(e.getLocalizedMessage());
+            System.err.println("Parse/IO Exception: " + e.getLocalizedMessage());
         }
     }
 
