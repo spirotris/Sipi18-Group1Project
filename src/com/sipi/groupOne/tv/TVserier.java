@@ -99,22 +99,24 @@ public class TVserier {
 		 * TODO change below first tier if to switch case on keywords.length Switch on
 		 * the following Show People (Person?) Seasons Episodes
 		 */
-		if (keywords.length < MINIMUM_ARGUMENTS) {
+		switch (keywords.length) {
+		case 0:
+		case 1:
 			result = MANUAL;
-		} else if (keywords.length == MINIMUM_ARGUMENTS) {
+			break;
+		case MINIMUM_ARGUMENTS:
 			if (keywords[FIRST_ARGUMENT].contains(SHOW_MANUAL)
 					|| keywords[FIRST_ARGUMENT].toLowerCase().contains(SHOW_MANUAL2)) {
 				result = MANUAL;
 				isAskingForManual = true;
-				return;
 			} else if (keywords[FIRST_ARGUMENT].toUpperCase().contains(API)) {
 				result = linkToAPI.toString();
 				isAskingForManual = false;
 				isSearchValid = false;
-				return;
 			}
 			result = ERROR_NOT_ENOUGH_KEYWORDS;
-		} else if (keywords.length == MIDDLE_VALUE_ARGUMENTS) {
+			break;
+		case MIDDLE_VALUE_ARGUMENTS:
 			if (keywords[FIRST_ARGUMENT].toLowerCase().equals(SHOW)) {
 				// If entered string is something like [name of tv series] then return URL for
 				// that series
@@ -123,35 +125,32 @@ public class TVserier {
 				isAskingForManual = false;
 				isSearchingForShow = true;
 				isSearchingForMultiple = false;
-				return;
 			} else if (keywords[FIRST_ARGUMENT].toLowerCase().contains(SHOWS)) {
 				searchValue = SEARCH + SHOWS + QUERY + keywords[SECOND_ARGUMENT];
 				isSearchValid = true;
 				isAskingForManual = false;
 				isSearchingForShows = true;
 				isSearchingForMultiple = true;
-				return;
-
 			} else if (keywords[FIRST_ARGUMENT].toLowerCase().contains(PEOPLE)
 					|| keywords[FIRST_ARGUMENT].toLowerCase().contains(PERSON)) {
 				searchValue = SEARCH + PEOPLE + QUERY + keywords[SECOND_ARGUMENT];
 				isSearchValid = true;
 				isAskingForManual = false;
 				isSearchingForMultiple = true;
-				return;
 			}
-
-		} else if (keywords.length == MAXIMUM_ARGUMENTS) {
+			break;
+		case MAXIMUM_ARGUMENTS:
 			// TODO När kommer den hit och hur ser det anropet ut?
 			searchValue += keywords[FIRST_ARGUMENT].toLowerCase() + EMBED + keywords[SECOND_ARGUMENT];
 			isSearchValid = true;
 			isAskingForManual = false;
-		} else {
+			break;
+		default:
 			result = TOO_MANY_PARAMETERS;
 			isSearchValid = false;
 			isAskingForManual = false;
+			break;
 		}
-
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -206,15 +205,10 @@ public class TVserier {
 						continue;
 					} else if (isSearchingForPeople) {
 						/*
-						if (!result.isEmpty())
-							result += ", ";
-						JSONObject nameOfPerson = (JSONObject) serie.get(PEOPLE);
-						result += nameOfPerson.get(NAME);
-						nrOfResultsCounted++;
-						if (nrOfResultsCounted == MAXIMUM_NUMBER_OF_RESULTS)
-							return;
-						continue;
-						*/
+						 * if (!result.isEmpty()) result += ", "; JSONObject nameOfPerson = (JSONObject)
+						 * serie.get(PEOPLE); result += nameOfPerson.get(NAME); nrOfResultsCounted++; if
+						 * (nrOfResultsCounted == MAXIMUM_NUMBER_OF_RESULTS) return; continue;
+						 */
 					} else {
 						result = "Detta kommando stöds inte";
 					}
