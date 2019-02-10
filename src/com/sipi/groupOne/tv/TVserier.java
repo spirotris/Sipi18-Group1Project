@@ -9,6 +9,7 @@ package com.sipi.groupOne.tv;
 import java.net.*;
 
 import java.util.Iterator;
+
 import com.sipi.groupOne.connections.JSONCon;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -21,7 +22,7 @@ public class TVserier {
 	private static final String EMBED = "&embed=";
 	private static final String SEARCH = "search/";
 	private static final String QUERY = "?q=";
-	private static final String SHOW = "show", SHOWS = "shows", PEOPLE = "people", PERSON = "person", NAME = "name",
+	private static final String SHOW = "show", SHOWS = "shows", PEOPLE = "people", PERSON = "person", BIRTHDAY="birthday", NAME = "name",
 			SUMMARY = "summary", SINGLE_SEARCH = "single";
 	private static final String MANUAL = "Använder API från " + NAME_OF_API_HOST_SITE
 			+ " för att svara på frågor. Skriv API för länk till den. Exempel på användning: tv show [namn på show] eller tv people [namn på person]";
@@ -137,12 +138,18 @@ public class TVserier {
 				isSearchValid = true;
 				isAskingForManual = false;
 				isSearchingForMultiple = true;
+				isSearchingForPeople = true;
 			}
 			break;
 		case MAXIMUM_ARGUMENTS:
 			if (keywords[FIRST_ARGUMENT].toLowerCase().contains(PEOPLE)
 					|| keywords[FIRST_ARGUMENT].toLowerCase().contains(PERSON)) {
-				searchValue = SEARCH + PEOPLE + QUERY + keywords[SECOND_ARGUMENT];
+				searchValue = SEARCH + PEOPLE + QUERY + keywords[SECOND_ARGUMENT] + keywords[THIRD_ARGUMENT];
+				isSearchValid = true;
+				isAskingForManual = false;
+				isSearchingForMultiple = true;
+				isSearchingForPeople = true;
+				break;
 			}
 			// TODO När kommer den hit och hur ser det anropet ut, kanske med people?
 			searchValue += keywords[FIRST_ARGUMENT].toLowerCase() + EMBED + keywords[SECOND_ARGUMENT];
@@ -163,8 +170,7 @@ public class TVserier {
 		JSONCon tvmazeAPI = new JSONCon();
 		JSONArray responseObjects = tvmazeAPI.tryApi(json);
 
-		if (responseObjects.isEmpty() || responseObjects == null) {
-			isResultEmpty = true;
+		if (isAnswerEmpty(responseObjects))	 {			
 			return;
 		} else {
 			isResultEmpty = false;
@@ -208,11 +214,10 @@ public class TVserier {
 							return;
 						continue;
 					} else if (isSearchingForPeople) {
-
 						if (!result.isEmpty())
 							result += ", ";
-						JSONObject nameOfPerson = (JSONObject) serie.get(PEOPLE);
-						result += nameOfPerson.get(NAME);
+						JSONObject nameOfPerson = (JSONObject) serie.get(PERSON);
+						result += nameOfPerson.get(NAME).toString() + nameOfPerson.get(BIRTHDAY).toString();
 						nrOfResultsCounted++;
 						if (nrOfResultsCounted == MAXIMUM_NUMBER_OF_RESULTS)
 							return;
@@ -224,6 +229,16 @@ public class TVserier {
 				}
 			}
 		}
+	}
+	
+	private boolean isAnswerEmpty(JSONArray Answer) {
+		for (int i = 0; i < Answer.size(); i++) {
+			if(((JSONObject)Answer.get(i)).isEmpty() || ((JSONObject)Answer.get(i)) == null) {
+				isResultEmpty = true;
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private void formatResult(String Sender) {
