@@ -1,7 +1,11 @@
 package com.sipi.groupOne;
 
 import com.sipi.groupOne.movie.FetchMovieInfo;
+import com.sipi.groupOne.gps.GetGPS;
+import com.sipi.groupOne.test.FetchTV;
 import com.sipi.groupOne.tv.TVserier;
+
+
 
 public class ChannelScreener {
 
@@ -17,6 +21,7 @@ public class ChannelScreener {
                 // To call the omdb api and get some movie-info
                 FetchMovieInfo movie = new FetchMovieInfo(sender, searchString(msgArray));
                 return movie.getAnswer();
+<<<<<<< HEAD
             case "serie":
             case "tv":
             case "!tv":
@@ -24,6 +29,15 @@ public class ChannelScreener {
                 return tv.getAnswer();
         }
 		return null;
+=======
+            case "gps":
+                GetGPS gps = new GetGPS(sender,searchString(msgArray));
+                return gps.getInfo();
+           
+        }
+
+        return null;
+>>>>>>> master
     }
 
     // Generates a string with the searchterm from the message and returning it
