@@ -69,6 +69,11 @@ public class BotProject extends PircBot implements Runnable {
     }
 
     @Override
+    protected void onTopic(String channel, String topic) {
+        ui.setTopic(channel, topic);
+    }
+
+    @Override
     protected void onPart(String channel, String sender, String login, String hostname) {
         ui.updateUserList();
         ui.setMessage(sender + "has left the channel");
@@ -87,7 +92,7 @@ public class BotProject extends PircBot implements Runnable {
 
     @Override
     public void run() {
-        ui.setMessage("* Attempting connection to server...");
+        ui.setMessage("Attempting connection to server...");
         try {
             this.connect(server);
         } catch (IrcException e) {

@@ -9,7 +9,7 @@ import javax.swing.SwingUtilities;
 import org.jibble.pircbot.User;
 
 public class MainFrame extends javax.swing.JFrame {
-
+    
     private BotProject bot;
 
     /**
@@ -41,6 +41,7 @@ public class MainFrame extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         userList = new javax.swing.JList<>();
         inputText = new javax.swing.JTextField();
+        topicTextField = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -73,6 +74,9 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
+        topicTextField.setEditable(false);
+        topicTextField.setText("Channel Topic");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -84,7 +88,8 @@ public class MainFrame extends javax.swing.JFrame {
                         .addComponent(inputText, javax.swing.GroupLayout.DEFAULT_SIZE, 630, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(sendButton))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 701, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 701, Short.MAX_VALUE)
+                    .addComponent(topicTextField))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -96,8 +101,11 @@ public class MainFrame extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 450, Short.MAX_VALUE)
-                    .addComponent(jScrollPane2))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 450, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(topicTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 419, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(disconnectButton)
@@ -114,18 +122,14 @@ public class MainFrame extends javax.swing.JFrame {
             @Override
             public void run() {
                 bot.disconnect();
+                sendButton.setEnabled(false);
+                inputText.setText("");
+                inputText.setEnabled(false);
             }
         });
     }//GEN-LAST:event_disconnectButtonActionPerformed
 
     private void sendButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendButtonActionPerformed
-        /*SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                bot.sendMessage(bot.getChannel(), inputText.getText());
-                inputText.setText("");
-            }
-        });*/
         setChatMessage(bot.getNick(), inputText.getText());
         bot.sendMessage(bot.getChannel(), inputText.getText());
         inputText.setText("");
@@ -136,8 +140,7 @@ public class MainFrame extends javax.swing.JFrame {
             this.sendButton.doClick();
         }
     }//GEN-LAST:event_inputTextKeyPressed
-
-    /// TODO: FIX, DOESN'T UPDATE PROPERLY!
+    
     public void updateUserList() {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
@@ -146,14 +149,14 @@ public class MainFrame extends javax.swing.JFrame {
                 DefaultListModel dlm = new DefaultListModel();
                 for (int i = 0; i < users.length; i++) {
                     dlm.add(i, users[i].getNick());
-
+                    
                 }
                 userList.setModel(dlm);
             }
         });
-
+        
     }
-
+    
     public void setChatMessage(String user, String msg) {
         String timestamp = new SimpleDateFormat("HH.mm.ss").format(new Date());
         String message = timestamp + " <" + user + "> " + msg + "\n";
@@ -164,7 +167,17 @@ public class MainFrame extends javax.swing.JFrame {
         }
         chatWindow.setCaretPosition(chatWindow.getDocument().getLength());
     }
-
+    
+    public void setTopic(String channel, String message) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                topicTextField.setText(channel + " - " + message);
+            }
+        });
+        
+    }
+    
     public void setMessage(String msg) {
         String timestamp = new SimpleDateFormat("HH.mm.ss").format(new Date());
         String message = timestamp + " * " + msg + "\n";
@@ -183,6 +196,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JButton sendButton;
+    private javax.swing.JTextField topicTextField;
     private javax.swing.JList<String> userList;
     // End of variables declaration//GEN-END:variables
 }
