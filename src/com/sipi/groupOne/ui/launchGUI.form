@@ -28,35 +28,42 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="0" attributes="0">
-              <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                  <Component id="logfilePromptLabel" max="32767" attributes="0"/>
-                  <Component id="ircNickLabel" alignment="1" max="32767" attributes="0"/>
-                  <Component id="ircServerLabel" alignment="1" max="32767" attributes="0"/>
-                  <Component id="ircChannelLabel" alignment="1" max="32767" attributes="0"/>
-                  <Component id="guiPromptLabel" alignment="0" pref="148" max="32767" attributes="0"/>
-              </Group>
-              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+          <Group type="102" attributes="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="ircChannelTextField" max="32767" attributes="0"/>
-                  <Component id="ircNickTextField" max="32767" attributes="0"/>
-                  <Component id="ircServerTextField" max="32767" attributes="0"/>
                   <Group type="102" alignment="0" attributes="0">
-                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                          <Component id="logfilePromptCombo" max="32767" attributes="0"/>
-                          <Component id="guiPromptCombo" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="ircNickLabel" alignment="1" pref="148" max="32767" attributes="0"/>
+                          <Component id="ircServerLabel" alignment="1" max="32767" attributes="0"/>
+                          <Component id="ircChannelLabel" alignment="1" max="32767" attributes="0"/>
                       </Group>
-                      <EmptySpace max="32767" attributes="0"/>
-                      <Component id="launchButton" pref="117" max="32767" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="ircChannelTextField" max="32767" attributes="0"/>
+                          <Component id="ircNickTextField" max="32767" attributes="0"/>
+                          <Component id="ircServerTextField" pref="174" max="32767" attributes="0"/>
+                      </Group>
+                  </Group>
+                  <Group type="102" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" attributes="0">
+                              <EmptySpace min="-2" pref="112" max="-2" attributes="0"/>
+                              <Component id="headerLabel" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" attributes="0">
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="logfileCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="guiCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace min="-2" pref="13" max="-2" attributes="0"/>
+                              <Component id="launchButton" min="-2" pref="145" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
               </Group>
-              <EmptySpace min="-2" max="-2" attributes="0"/>
-          </Group>
-          <Group type="102" alignment="0" attributes="0">
-              <EmptySpace min="-2" pref="112" max="-2" attributes="0"/>
-              <Component id="headerLabel" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -81,15 +88,11 @@
                   <Component id="ircChannelTextField" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
+              <Component id="guiCheckBox" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="guiPromptLabel" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
-                  <Component id="guiPromptCombo" alignment="3" max="32767" attributes="0"/>
-              </Group>
-              <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="logfilePromptLabel" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
-                  <Component id="logfilePromptCombo" alignment="3" max="32767" attributes="0"/>
                   <Component id="launchButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="logfileCheckBox" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -100,50 +103,6 @@
     <Component class="javax.swing.JLabel" name="ircNickLabel">
       <Properties>
         <Property name="text" type="java.lang.String" value="Bot nickname"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JComboBox" name="guiPromptCombo">
-      <Properties>
-        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-          <StringArray count="2">
-            <StringItem index="0" value="Yes"/>
-            <StringItem index="1" value="No"/>
-          </StringArray>
-        </Property>
-      </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="guiPromptComboActionPerformed"/>
-      </Events>
-      <AuxValues>
-        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
-      </AuxValues>
-    </Component>
-    <Component class="javax.swing.JLabel" name="logfilePromptLabel">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Save log file"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JComboBox" name="logfilePromptCombo">
-      <Properties>
-        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-          <StringArray count="2">
-            <StringItem index="0" value="Yes"/>
-            <StringItem index="1" value="No"/>
-          </StringArray>
-        </Property>
-        <Property name="selectedIndex" type="int" value="1"/>
-        <Property name="enabled" type="boolean" value="false"/>
-      </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="logfilePromptComboActionPerformed"/>
-      </Events>
-      <AuxValues>
-        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
-      </AuxValues>
-    </Component>
-    <Component class="javax.swing.JLabel" name="guiPromptLabel">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Use Graphic Interface"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="ircChannelLabel">
@@ -186,6 +145,16 @@
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="launchButtonActionPerformed"/>
       </Events>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="guiCheckBox">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Use Graphical Interface"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="logfileCheckBox">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Save logfile"/>
+      </Properties>
     </Component>
   </SubComponents>
 </Form>

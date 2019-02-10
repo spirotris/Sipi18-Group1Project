@@ -19,6 +19,7 @@ public class BotProject extends PircBot implements Runnable {
         this.channel = channel;
         this.setName(nickname);
         this.setLogin("botProj");
+        this.setAutoNickChange(true);
         this.setVerbose(true);
         if (saveLog) {
             try {

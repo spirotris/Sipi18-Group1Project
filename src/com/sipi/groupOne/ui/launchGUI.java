@@ -34,10 +34,6 @@ public class launchGUI extends javax.swing.JFrame implements Runnable {
     private void initComponents() {
 
         ircNickLabel = new javax.swing.JLabel();
-        guiPromptCombo = new javax.swing.JComboBox<>();
-        logfilePromptLabel = new javax.swing.JLabel();
-        logfilePromptCombo = new javax.swing.JComboBox<>();
-        guiPromptLabel = new javax.swing.JLabel();
         ircChannelLabel = new javax.swing.JLabel();
         ircServerLabel = new javax.swing.JLabel();
         ircNickTextField = new javax.swing.JTextField();
@@ -45,6 +41,8 @@ public class launchGUI extends javax.swing.JFrame implements Runnable {
         ircChannelTextField = new javax.swing.JTextField();
         headerLabel = new javax.swing.JLabel();
         launchButton = new javax.swing.JButton();
+        guiCheckBox = new javax.swing.JCheckBox();
+        logfileCheckBox = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("IRC Bot Setup Window");
@@ -52,26 +50,6 @@ public class launchGUI extends javax.swing.JFrame implements Runnable {
         setResizable(false);
 
         ircNickLabel.setText("Bot nickname");
-
-        guiPromptCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Yes", "No" }));
-        guiPromptCombo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                guiPromptComboActionPerformed(evt);
-            }
-        });
-
-        logfilePromptLabel.setText("Save log file");
-
-        logfilePromptCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Yes", "No" }));
-        logfilePromptCombo.setSelectedIndex(1);
-        logfilePromptCombo.setEnabled(false);
-        logfilePromptCombo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                logfilePromptComboActionPerformed(evt);
-            }
-        });
-
-        guiPromptLabel.setText("Use Graphic Interface");
 
         ircChannelLabel.setText("IRC Channel");
 
@@ -93,34 +71,41 @@ public class launchGUI extends javax.swing.JFrame implements Runnable {
             }
         });
 
+        guiCheckBox.setText("Use Graphical Interface");
+
+        logfileCheckBox.setText("Save logfile");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(logfilePromptLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(ircNickLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(ircServerLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(ircChannelLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(guiPromptLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(ircChannelTextField)
-                    .addComponent(ircNickTextField)
-                    .addComponent(ircServerTextField)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(logfilePromptCombo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(guiPromptCombo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(launchButton, javax.swing.GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)))
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(ircNickLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE)
+                            .addComponent(ircServerLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(ircChannelLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(ircChannelTextField)
+                            .addComponent(ircNickTextField)
+                            .addComponent(ircServerTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 174, Short.MAX_VALUE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(112, 112, 112)
+                                .addComponent(headerLabel))
+                            .addGroup(layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(logfileCheckBox)
+                                    .addComponent(guiCheckBox))
+                                .addGap(13, 13, 13)
+                                .addComponent(launchButton, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
-                .addGap(112, 112, 112)
-                .addComponent(headerLabel)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -140,27 +125,16 @@ public class launchGUI extends javax.swing.JFrame implements Runnable {
                     .addComponent(ircChannelLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(ircChannelTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(guiCheckBox)
+                .addGap(2, 2, 2)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(guiPromptLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(guiPromptCombo))
-                .addGap(1, 1, 1)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(logfilePromptLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(logfilePromptCombo)
-                    .addComponent(launchButton))
+                    .addComponent(launchButton)
+                    .addComponent(logfileCheckBox))
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void guiPromptComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guiPromptComboActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_guiPromptComboActionPerformed
-
-    private void logfilePromptComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logfilePromptComboActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_logfilePromptComboActionPerformed
 
     private void launchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_launchButtonActionPerformed
         BotProject bot;
@@ -168,7 +142,7 @@ public class launchGUI extends javax.swing.JFrame implements Runnable {
                 ircServerTextField.getText(),
                 ircNickTextField.getText(),
                 ircChannelTextField.getText(),
-                false));
+                logfileCheckBox.isSelected()));
         MainFrame ui = new MainFrame(bot);
         bot.setUi(ui);
         t.start();
@@ -176,8 +150,7 @@ public class launchGUI extends javax.swing.JFrame implements Runnable {
     }//GEN-LAST:event_launchButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JComboBox<String> guiPromptCombo;
-    private javax.swing.JLabel guiPromptLabel;
+    private javax.swing.JCheckBox guiCheckBox;
     private javax.swing.JLabel headerLabel;
     private javax.swing.JLabel ircChannelLabel;
     private javax.swing.JTextField ircChannelTextField;
@@ -186,8 +159,7 @@ public class launchGUI extends javax.swing.JFrame implements Runnable {
     private javax.swing.JLabel ircServerLabel;
     private javax.swing.JTextField ircServerTextField;
     private javax.swing.JButton launchButton;
-    private javax.swing.JComboBox<String> logfilePromptCombo;
-    private javax.swing.JLabel logfilePromptLabel;
+    private javax.swing.JCheckBox logfileCheckBox;
     // End of variables declaration//GEN-END:variables
 
     @Override
