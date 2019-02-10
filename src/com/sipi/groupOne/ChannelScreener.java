@@ -2,10 +2,7 @@ package com.sipi.groupOne;
 
 import com.sipi.groupOne.movie.FetchMovieInfo;
 import com.sipi.groupOne.gps.GetGPS;
-import com.sipi.groupOne.test.FetchTV;
 import com.sipi.groupOne.tv.TVserier;
-
-
 
 public class ChannelScreener {
 
@@ -13,17 +10,13 @@ public class ChannelScreener {
         // Cleaning up the chat.message to find a command to process
         // Split the message to an array of the words to extract the command
         String[] msgArray = msg.split(" ");
-        switch (msgArray[0].toLowerCase()) {
-            case "time":
-                String time = new java.util.Date().toString();
-                return sender + ": The time is now " + time;
+        switch (msgArray[0].toLowerCase()) {           
             case "movie":
-                // To call the omdb api and get some movie-info
-                FetchMovieInfo movie = new FetchMovieInfo(sender, searchString(msgArray));
-                return movie.getAnswer();
+                return new FetchMovieInfo(sender, searchString(msgArray)).getAnswer();
+            case "!tv":
+                return new TVserier(sender, msgArray).getAnswer();
             case "gps":
-                GetGPS gps = new GetGPS(sender,searchString(msgArray));
-                return gps.getInfo();
+                return new GetGPS(sender,searchString(msgArray)).getInfo();
            
         }
 
