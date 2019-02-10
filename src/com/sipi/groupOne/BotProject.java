@@ -87,6 +87,7 @@ public class BotProject extends PircBot implements Runnable {
 
     @Override
     public void run() {
+        ui.setMessage("* Attempting connection to server...");
         try {
             this.connect(server);
         } catch (IrcException e) {
