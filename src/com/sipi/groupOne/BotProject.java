@@ -54,7 +54,7 @@ public class BotProject extends PircBot implements Runnable {
     @Override
     protected void onUserList(String channel, User[] users) {
         ui.updateUserList();
-        ui.setName("PircBot (" + this.getNick() + ") in " + channel);
+        ui.setName(getNick() + " (" + this.getNick() + ") in " + channel);
     }
 
     @Override

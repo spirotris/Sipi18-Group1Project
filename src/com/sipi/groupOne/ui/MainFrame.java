@@ -146,12 +146,11 @@ public class MainFrame extends javax.swing.JFrame {
             @Override
             public void run() {
                 User[] users = bot.getUsers(bot.getChannels()[0]);
-                DefaultListModel dlm = new DefaultListModel();
-                for (int i = 0; i < users.length; i++) {
-                    dlm.add(i, users[i].getNick());
-                    
+                SortedListModel slm = new SortedListModel();
+                for (User user : users) {
+                    slm.add(user.getNick());
                 }
-                userList.setModel(dlm);
+                userList.setModel(slm);
             }
         });
         
