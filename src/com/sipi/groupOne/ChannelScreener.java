@@ -12,6 +12,8 @@ public class ChannelScreener {
         switch (msgArray[0].toLowerCase()) {
             case "movie":
                 return new FetchMovieInfo(sender, searchString(msgArray)).getAnswer();
+            case "!tv":
+                return new TVserier(sender, msgArray).getAnswer();
             case "gps":
                 return new GetGPS(sender, hostname).getInfo();
         }
