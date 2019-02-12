@@ -1,5 +1,5 @@
 <REQUEST>
-  <LOGIN authenticationkey="6303830c40c8444aa528618c9ffac0d3" />
+  <LOGIN authenticationkey="{auth}" />
   <QUERY objecttype="TrainAnnouncement" orderby="AdvertisedTimeAtLocation">
     <FILTER>
       <AND>
