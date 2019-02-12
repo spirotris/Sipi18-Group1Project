@@ -1,12 +1,9 @@
 package com.sipi.groupOne.train;
 
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -19,73 +16,33 @@ import java.io.IOException;
 // Generates a XML-file to be able to call the API of Trafikverket
 class GenerateXML {
     private static String auth;
+    private static Document doc;
+    private static String fileName;
 
-    // Trying to load the address for the api
-    private static boolean initAuth() {
-        try {
-            File key = new File("src/com/sipi/groupOne/train/application.properties");
-            BufferedReader b = new BufferedReader(new FileReader(key));
-            auth = b.readLine(); // Reading in single line since it is the only thing in the file
-            return true;
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-            return false;
-        }
-    }
 
     // Creates a XML-file called trainCall.xml with contains the xml to request the status of a train-depature
-    static boolean trainXML(String trainNr) {
-        if(initAuth()) {
-            try {
-                DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-                DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+    public static String createXML(String searchValue) {
 
-                // Root Element = REQUEST
-                Document doc = docBuilder.newDocument();
-                Element rootElement = doc.createElement("REQUEST");
-                doc.appendChild(rootElement);
+        try {
+            // Write the information to xml-file
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+            DOMSource source = new DOMSource(doc);
+            StreamResult result = new StreamResult(new File("src\\com\\sipi\\groupOne\\train\\xmlCalls\\" + fileName));
 
-                Element auth = doc.createElement("LOGIN");
-                rootElement.appendChild(auth);
+            transformer.transform(source, result);
 
-                auth.setAttribute("authenticationkey", String.valueOf(auth));
+            System.out.println("Filen sparad som " + fileName);
 
-                // The QUERY Contains what you request
-                Element query = doc.createElement("QUERY");
-                rootElement.appendChild(query);
-
-                query.setAttribute("objecttype", "TrainAnnouncement");
-
-                // Possibility for a narrower filter of the result
-                Element filter = doc.createElement("FILTER");
-                query.appendChild(filter);
-
-
-                Element eq = doc.createElement("EQ");
-                filter.appendChild(eq);
-
-                // States which train number you want to get info about
-                eq.setAttribute("name", "AdvertisedTrainIdent");
-                eq.setAttribute("value", trainNr);
-
-                // Write the information to xml-file
-                TransformerFactory transformerFactory = TransformerFactory.newInstance();
-                Transformer transformer = transformerFactory.newTransformer();
-                DOMSource source = new DOMSource(doc);
-                StreamResult result = new StreamResult(new File("src\\com\\sipi\\groupOne\\train\\xmlCalls\\trainCall.xml"));
-
-                transformer.transform(source, result);
-
-                System.out.println("Filen Sparad!");
-
-                return true;
-
-            } catch (ParserConfigurationException pce) {
-                pce.printStackTrace();
-            } catch (TransformerException tfe) {
-                tfe.printStackTrace();
-            }
+            return fileName;
+        } catch (TransformerException te) {
+            System.err.println(te.getMessageAndLocation());
+            return null;
         }
-        return false;
+        // FÖLJANDE KOD FUNGERAR BRA
+        /*        boolean isString =
+
+        }
+        return false; */
     }
 }

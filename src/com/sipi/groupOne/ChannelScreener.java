@@ -3,7 +3,7 @@ package com.sipi.groupOne;
 import com.sipi.groupOne.movie.FetchMovieInfo;
 <<<<<<< HEAD
 import com.sipi.groupOne.train.FetchStationInfo;
-import com.sipi.groupOne.train.FetchTrainInfo;
+import com.sipi.groupOne.train.SetXMLTrain;
 import com.sipi.groupOne.test.FetchGPS;
 import com.sipi.groupOne.test.FetchTV;
 =======
@@ -20,9 +20,9 @@ public class ChannelScreener {
         switch (msgArray[0].toLowerCase()) {           
             case "station":
                 // To call the api from Trafikverket to get a train-stations departure information
-                return new FetchStationInfo(sender, searchString(msgArray)).station.getAnswer();
+                return new FetchStationInfo(sender, searchString(msgArray)).getAnswer();
 	    case "train":
-                return new FetchTrainInfo(sender, searchString(msgArray)).getAnswer();
+                return new SetXMLTrain(sender, searchString(msgArray)).getAnswer();
 	    case "movie":
 		// To make a call to the omdb api to get some movie-info
                 return new FetchMovieInfo(sender, searchString(msgArray)).getAnswer();
