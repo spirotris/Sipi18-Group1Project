@@ -6,25 +6,14 @@ import org.w3c.dom.Element;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import java.io.File;
 
 public class SetXMLTrain extends SetXML{
     public SetXMLTrain(String searchValue) {
-
-    }
-
-    public String getAnswer() {
-        boolean test = GenerateXML.createXML("535");
-        return "Försökte skapa en fil, fick svaret " + test;
+        super(searchValue);
     }
 
     @Override
-    public boolean generateXML() {
+    public Document generateXML() {
         try {
             DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
@@ -57,6 +46,7 @@ public class SetXMLTrain extends SetXML{
             eq.setAttribute("name", "AdvertisedTrainIdent");
             eq.setAttribute("value", searchValue);
 
+            /*
             // Write the information to xml-file
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
@@ -66,14 +56,13 @@ public class SetXMLTrain extends SetXML{
             transformer.transform(source, result);
 
             System.out.println("Filen Sparad!");
+            */
 
-            return true;
+            return doc;
 
         } catch (ParserConfigurationException pce) {
             pce.printStackTrace();
-        } catch (TransformerException tfe) {
-            tfe.printStackTrace();
+            return null;
         }
-    }
     }
 }

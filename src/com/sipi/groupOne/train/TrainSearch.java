@@ -1,60 +1,57 @@
 package com.sipi.groupOne.train;
 
+import com.sipi.groupOne.connections.XMLtoJSONCon;
+
 import java.io.File;
 
 public class TrainSearch {
     private String APIUrl = "http://api.trafikinfo.trafikverket.se/v1.3/data.json";
     private File tempFile;
-    private String fileToSend;
-
-    private static int trainNr;
-    private static String station;
-
+    private String fileToSend = "src\\com\\sipi\\groupOne\\train\\xmlCalls\\";
     private final String SENDER;
     private final String SEARCHVALUE;
 
-    private StringBuilder jsonValue;
+    XMLtoJSONCon xmlJson = new XMLtoJSONCon();
+
+    FetchStationInfo fsi;
+
+
+    private StringBuilder jsonValue = new StringBuilder();
 
     // Constructor
     public TrainSearch(String sender, String searchValue) {
         SENDER = sender;
         SEARCHVALUE = searchValue;
-        // Checking if the XML-file exists using init()
-        if(init()) {
-            generateXMLInfo();
-        } else {
-            jsonValue = new StringBuilder("Lyckades inte hitta något.");
-        }
+        generateXMLInfo();
     }
 
     private void generateXMLInfo() {
-        if(SEARCHVALUE.length() < 5) {
-            station = new SetXMLStationSignature().locationXML(SEARCHVALUE);
-        }
-        if(station != null) {
-            doc = new SetXMLStationSignature().locationXML(station);
-            fileName = station + "Call.xml";
+        if(!setSearchValue(SEARCHVALUE))
+        {
+            fileToSend += GenerateXML.addStationXML(SEARCHVALUE);
+
+            fsi = new FetchStationInfo(xmlJson.tryApi(APIUrl, fileToSend), SEARCHVALUE);
+            jsonValue.append("Hej " + SENDER + "! Jag hittade: " + fsi.getAnswer());
         } else {
-            fileName = trainNr + "Call.xml";
+            fileToSend += GenerateXML.addTrainXML(SEARCHVALUE);
+
         }
     }
 
-    private static void setSearchValue(String searchValue) {
+    private boolean setSearchValue(String searchValue) {
         try {
-            trainNr = Integer.parseInt(searchValue);
+            Integer.parseInt(searchValue);
+            return true;
         } catch (Exception e) {
-            station = searchValue;
+            return false;
         }
     }
 
-    // Checking if requested file exists
-    private boolean init() {
-        try{
-            tempFile = new File(fileToSend);
-            return tempFile.exists();
-        } catch (Exception e) {
-            System.err.println("Fel vid försök att ladda filen: " + e.getMessage());
-            return false;
+    public String getAnswer() {
+        if(jsonValue.length() < 0) {
+            return jsonValue.toString();
+        } else {
+            return "Hej " + SENDER + "! Jag hittade tyvärr inget.";
         }
     }
 }

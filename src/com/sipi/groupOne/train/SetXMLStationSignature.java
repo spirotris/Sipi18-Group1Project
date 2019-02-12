@@ -17,9 +17,15 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-public class SetXMLStationSignature {
-    // Creates a XML-file called trainCall.xml with contains the xml to request the status of a train-depature
-    public Document locationXML(String searchValue) {
+public class SetXMLStationSignature extends SetXML {
+
+
+    public SetXMLStationSignature(String searchValue) {
+        super(searchValue);
+    }
+
+    @Override
+    public Document generateXML() {
         try {
             DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
@@ -56,8 +62,7 @@ public class SetXMLStationSignature {
 
         } catch (ParserConfigurationException pce) {
             pce.printStackTrace();
+            return null;
         }
-
-        return null;
     }
 }

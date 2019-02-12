@@ -1,5 +1,7 @@
 package com.sipi.groupOne.train;
 
+import org.w3c.dom.Document;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -28,5 +30,5 @@ public abstract class SetXML {
         }
     }
 
-    public abstract boolean generateXML();
+    public abstract Document generateXML();
 }

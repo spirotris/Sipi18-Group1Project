@@ -1,14 +1,8 @@
 package com.sipi.groupOne;
 
 import com.sipi.groupOne.movie.FetchMovieInfo;
-<<<<<<< HEAD
-import com.sipi.groupOne.train.FetchStationInfo;
-import com.sipi.groupOne.train.SetXMLTrain;
-import com.sipi.groupOne.test.FetchGPS;
-import com.sipi.groupOne.test.FetchTV;
-=======
 import com.sipi.groupOne.gps.GetGPS;
->>>>>>> master
+import com.sipi.groupOne.train.TrainSearch;
 import com.sipi.groupOne.tv.TVserier;
 
 public class ChannelScreener {
@@ -18,13 +12,11 @@ public class ChannelScreener {
         // Split the message to an array of the words to extract the command
         String[] msgArray = msg.split(" ");
         switch (msgArray[0].toLowerCase()) {           
-            case "station":
+            case "train":
                 // To call the api from Trafikverket to get a train-stations departure information
-                return new FetchStationInfo(sender, searchString(msgArray)).getAnswer();
-	    case "train":
-                return new SetXMLTrain(sender, searchString(msgArray)).getAnswer();
-	    case "movie":
-		// To make a call to the omdb api to get some movie-info
+                return new TrainSearch(sender, searchString(msgArray)).getAnswer();
+            case "movie":
+                // To make a call to the omdb api to get some movie-info
                 return new FetchMovieInfo(sender, searchString(msgArray)).getAnswer();
             case "!tv":
                 return new TVserier(sender, msgArray).getAnswer();

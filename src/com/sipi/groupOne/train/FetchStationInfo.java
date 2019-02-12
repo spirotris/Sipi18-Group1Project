@@ -15,17 +15,15 @@ public class FetchStationInfo {
     private File tempFile;
     private String fileToSend = "src\\com\\sipi\\groupOne\\train\\xmlCalls\\leCall.txt";
 
-    private final String SENDER;
     private final String SEARCHVALUE;
 
     private StringBuilder jsonValue;
 
     // Constructor
-    public FetchStationInfo(String sender, String searchValue) {
-        SENDER = sender;
+    public FetchStationInfo(JSONArray jsonArray, String searchValue) {
         SEARCHVALUE = searchValue;
         // Checking if the XML-file exists using init()
-        if(init()) {
+        if(!init()) {
             sendRequest();
         } else {
             jsonValue = new StringBuilder("Lyckades inte hitta något.");
@@ -36,6 +34,11 @@ public class FetchStationInfo {
     private boolean init() {
         try{
             tempFile = new File(fileToSend);
+            if(tempFile.exists())
+            {
+                tempFile.delete();
+            }
+            System.err.println(tempFile + " raderades för att skapa en ny.");
             return tempFile.exists();
         } catch (Exception e) {
             System.out.println("Fel vid försök att ladda filen: " + e.getMessage());
@@ -56,9 +59,9 @@ public class FetchStationInfo {
         JSONObject responseObj = (JSONObject)jObject.get("RESPONSE");
         JSONArray resultArray = (JSONArray)responseObj.get("RESULT");
         if(jObject.get("RESPONSE") == null || jObject.isEmpty()) {
-            jsonValue = new StringBuilder("Hej " + SENDER + "! Jag hittade inga uppifter om stationen " + SEARCHVALUE);
+            jsonValue = new StringBuilder("Jag hittade inga uppifter om stationen " + SEARCHVALUE);
         } else {
-            jsonValue = new StringBuilder("Hej " + SENDER + "! Jag hittade följande avgångar:");
+            jsonValue = new StringBuilder("Jag hittade följande avgångar:");
             for(Object searchResults : resultArray) {
                 JSONObject o = (JSONObject)searchResults;
                 JSONArray resultsArr = (JSONArray)o.get("TrainAnnouncement");
