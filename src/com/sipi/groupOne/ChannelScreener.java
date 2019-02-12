@@ -1,10 +1,14 @@
 package com.sipi.groupOne;
 
 import com.sipi.groupOne.movie.FetchMovieInfo;
+<<<<<<< HEAD
 import com.sipi.groupOne.train.FetchStationInfo;
 import com.sipi.groupOne.train.FetchTrainInfo;
 import com.sipi.groupOne.test.FetchGPS;
 import com.sipi.groupOne.test.FetchTV;
+=======
+import com.sipi.groupOne.gps.GetGPS;
+>>>>>>> master
 import com.sipi.groupOne.tv.TVserier;
 
 public class ChannelScreener {
@@ -13,31 +17,22 @@ public class ChannelScreener {
         // Cleaning up the chat.message to find a command to process
         // Split the message to an array of the words to extract the command
         String[] msgArray = msg.split(" ");
-        switch (msgArray[0].toLowerCase()) {
-            case "time":
-                String time = new java.util.Date().toString();
-                return sender + ": The time is now " + time;
-            case "movie":
-                // To call the omdb api and get some movie-info
-                FetchMovieInfo movie = new FetchMovieInfo(sender, searchString(msgArray));
-                return movie.getAnswer();
+        switch (msgArray[0].toLowerCase()) {           
             case "station":
                 // To call the api from Trafikverket to get a train-stations departure information
-                FetchStationInfo station = new FetchStationInfo(sender, searchString(msgArray));
-                return station.getAnswer();
-            case "train":
-                FetchTrainInfo train = new FetchTrainInfo();
-                return train.getAnswer();
-            case "serie":
-                FetchTV serie = new FetchTV(sender, searchString(msgArray));
-                return serie.getAnswer();
-            case "gps":
-                FetchGPS gps = new FetchGPS(sender,searchString(msgArray));
-                return gps.getAnswer();
+                return new FetchStationInfo(sender, searchString(msgArray)).station.getAnswer();
+	    case "train":
+                return new FetchTrainInfo(sender, searchString(msgArray)).getAnswer();
+	    case "movie":
+		// To make a call to the omdb api to get some movie-info
+                return new FetchMovieInfo(sender, searchString(msgArray)).getAnswer();
             case "!tv":
-            	TVserier tv = new TVserier(sender, msgArray);
-                return tv.getAnswer();
+                return new TVserier(sender, msgArray).getAnswer();
+            case "gps":
+                return new GetGPS(sender,searchString(msgArray)).getInfo();
+           
         }
+
         return null;
     }
 

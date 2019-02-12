@@ -7,11 +7,8 @@
 package com.sipi.groupOne.tv;
 
 import java.net.*;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
+import java.util.Iterator;
 import com.sipi.groupOne.connections.JSONCon;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -24,16 +21,18 @@ public class TVserier {
 	private static final String EMBED = "&embed=";
 	private static final String SEARCH = "search/";
 	private static final String QUERY = "?q=";
-	private static final String SHOW = "show", SHOWS = "shows", PEOPLE = "people", SUMMARY = "summary";
+	private static final String SHOW = "show", SHOWS = "shows", PEOPLE = "people", PERSON = "person", NAME = "name",
+			SUMMARY = "summary", SINGLE_SEARCH = "single";
 	private static final String MANUAL = "Använder API från " + NAME_OF_API_HOST_SITE
 			+ " för att svara på frågor. Skriv API för länk till den. Exempel på användning: tv show [namn på show] eller tv people [namn på person]";
 	private static final String ERROR_NOT_ENOUGH_KEYWORDS = "Behöver fler nyckelord för att utföra en sökning. Skriv ? eller hjälp för mer inforamtion";
 	private static final String SHOW_MANUAL = "?", SHOW_MANUAL2 = "help";
 	private static final String EMPTY_RESULT = "Jag fick inga svar med den sökningen!";
 	private static final String TOO_MANY_PARAMETERS = "För många nyckelord eller så har jag inte stöd för dessa ord";
+	private static final String REMOVE_HTML_REGEX = "(<.*?>)|(&.*?;)|([ ]{2,})";
 
-	private static final int FIRST_ARGUMENT = 1, SECOND_ARGUMENT = 2, THIRD_ARGUMENT = 3, FOURTH_ARGUMENT = 4,
-			MINIMUM_ARGUMENTS = 2, MIDDLE_VALUE_ARGUMENTS = 3, MAXIMUM_ARGUMENTS = 4;
+	private static final int FIRST_ARGUMENT = 1, SECOND_ARGUMENT = 2, MINIMUM_ARGUMENTS = 2, MIDDLE_VALUE_ARGUMENTS = 3,
+			MAXIMUM_ARGUMENTS = 4, MAXIMUM_NUMBER_OF_RESULTS = 10;
 
 	private static String searchValue = "";
 	private static String result = "";
@@ -45,6 +44,7 @@ public class TVserier {
 	private static boolean isSearchingForShow = false;
 	private static boolean isSearchingForShows = false;
 	private static boolean isSearchingForPeople = false;
+	private static boolean isSearchingForMultiple = false;
 
 	public TVserier(String sender, String[] searchValue) {
 
@@ -82,13 +82,7 @@ public class TVserier {
 		isSearchingForShow = false;
 		isSearchingForShows = false;
 		isSearchingForPeople = false;
-	}
-
-	private boolean isResponseEmpty(JSONObject responseObject, JSONArray responseObjects) {
-		if (responseObject.isEmpty() || responseObjects.isEmpty())
-			return true;
-		else
-			return false;
+		isSearchingForMultiple = false;
 	}
 
 	/**
@@ -102,117 +96,125 @@ public class TVserier {
 		// get specific episode (by season nr and episode nr)
 		// show psych cast
 		/*
-		 * Switch on the following Show People (Person?) Seasons Episodes
+		 * TODO change below first tier if to switch case on keywords.length Switch on
+		 * the following Show People (Person?) Seasons Episodes
 		 */
-		if (keywords.length < MINIMUM_ARGUMENTS) {
+		switch (keywords.length) {
+		case 0:
+		case 1:
 			result = MANUAL;
-		} else if (keywords.length == MINIMUM_ARGUMENTS) {
+			break;
+		case MINIMUM_ARGUMENTS:
 			if (keywords[FIRST_ARGUMENT].contains(SHOW_MANUAL)
 					|| keywords[FIRST_ARGUMENT].toLowerCase().contains(SHOW_MANUAL2)) {
 				result = MANUAL;
 				isAskingForManual = true;
-				return;
 			} else if (keywords[FIRST_ARGUMENT].toUpperCase().contains(API)) {
 				result = linkToAPI.toString();
 				isAskingForManual = false;
 				isSearchValid = false;
-				return;
 			}
 			result = ERROR_NOT_ENOUGH_KEYWORDS;
-		} else if (keywords.length == MIDDLE_VALUE_ARGUMENTS) {
+			break;
+		case MIDDLE_VALUE_ARGUMENTS:
 			if (keywords[FIRST_ARGUMENT].toLowerCase().equals(SHOW)) {
 				// If entered string is something like [name of tv series] then return URL for
 				// that series
-				searchValue = SEARCH + SHOWS + QUERY + keywords[SECOND_ARGUMENT];
+				searchValue = SINGLE_SEARCH + SEARCH + SHOWS + QUERY + keywords[SECOND_ARGUMENT];
 				isSearchValid = true;
 				isAskingForManual = false;
 				isSearchingForShow = true;
-				return;
+				isSearchingForMultiple = false;
 			} else if (keywords[FIRST_ARGUMENT].toLowerCase().contains(SHOWS)) {
+				searchValue = SEARCH + SHOWS + QUERY + keywords[SECOND_ARGUMENT];
 				isSearchValid = true;
 				isAskingForManual = false;
 				isSearchingForShows = true;
-				return;
-
-			} else if (keywords[FIRST_ARGUMENT].toLowerCase().contains(PEOPLE)) {
+				isSearchingForMultiple = true;
+			} else if (keywords[FIRST_ARGUMENT].toLowerCase().contains(PEOPLE)
+					|| keywords[FIRST_ARGUMENT].toLowerCase().contains(PERSON)) {
 				searchValue = SEARCH + PEOPLE + QUERY + keywords[SECOND_ARGUMENT];
 				isSearchValid = true;
 				isAskingForManual = false;
-				return;
+				isSearchingForMultiple = true;
 			}
-
-		} else if (keywords.length == MAXIMUM_ARGUMENTS) {
-			// TODO När kommer den hit och hur ser det anropet ut?
+			break;
+		case MAXIMUM_ARGUMENTS:
+			// TODO När kommer den hit och hur ser det anropet ut, kanske med people?
 			searchValue += keywords[FIRST_ARGUMENT].toLowerCase() + EMBED + keywords[SECOND_ARGUMENT];
 			isSearchValid = true;
 			isAskingForManual = false;
-		} else {
+			break;
+		default:
 			result = TOO_MANY_PARAMETERS;
 			isSearchValid = false;
 			isAskingForManual = false;
+			break;
 		}
-
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void jsonResponse() {
 		String json = linkToAPI + searchValue;
-		JSONCon tvmazeAPI = new JSONCon();		
-		JSONArray responseObjects = (JSONArray) (tvmazeAPI.tryApi(json)).get(0);
+		JSONCon tvmazeAPI = new JSONCon();
+		JSONArray responseObjects = tvmazeAPI.tryApi(json);
 
-		// Picks the first row from the api-response
-		JSONObject responseObject = (JSONObject) responseObjects.get(0);
-		if (isResponseEmpty(responseObject, responseObjects)) {
+		if (responseObjects.isEmpty() || responseObjects == null) {
 			isResultEmpty = true;
+			return;
 		} else {
-			
-			@SuppressWarnings("unchecked")
-			HashMap<String, String> results = (HashMap<String, String>) ((HashMap<String, Object>)responseObject).clone();
-			
-			Iterator<Map.Entry<String, String>> entries = results.entrySet().iterator();
-			
-			// Iterates through the map to get the information i want
-			while (entries.hasNext()) {
-				Map.Entry<String, String> entry = entries.next();
-				if (isSearchingForShow) {
-					if(entry.getKey().contains(SUMMARY)) {
-						//entry.getValue().toString();
-						//How to get the value for the key of Summary???
-						
-						result = "";
-						isResultEmpty = false;
-						break;
-					}
-				//If you want the result of a search to contain several results (e.g. user entered "tv shows [name of tvseries]"
-				} else if (isSearchingForShows) {
-					for (Object searchResults : responseObjects) {
-						JSONObject o = (JSONObject) searchResults;
-						
-					}
-					isResultEmpty = false;
-				} else if (isSearchingForPeople) {
-					isResultEmpty = false;
-				} else {
-					//Found something else
-					continue; //Until I actually develop the other if cases, this is just here for future reference and plans
-				}
-				// Detta behöver anpassas specifik för vad man har sökt på
-				// if (tv.get("Type").equals("movie"))
-				// jsonValue += tv.get("Title") + ", från " + movie.get("Year") + "; ";
-			}
+			isResultEmpty = false;
+			// Picks the first row from the api-response
+			for (Object searchResults : responseObjects) {
+				JSONArray resultsArr = null;
+				JSONObject resultObj;
+				Iterator serieItr;
+				int nrOfResultsCounted = 0;
 
+				if (isSearchingForMultiple) {
+					resultsArr = (JSONArray) searchResults;
+					serieItr = resultsArr.iterator();
+				} else {
+					resultObj = (JSONObject) searchResults;
+					resultsArr = new JSONArray();
+					resultsArr.add(resultObj);
+					serieItr = resultsArr.iterator();
+				}
+
+				// Iterates through the map to get the information i want
+				while (serieItr.hasNext()) {
+
+					Object slide = serieItr.next();
+					JSONObject serie = (JSONObject) slide;
+					System.out.println(serie.toJSONString());
+					if (isSearchingForShow) {
+						// Visar serien och en beskrivninga för bästa träffen av sökresultatet
+						result += serie.get(NAME) + ": " + serie.get(SUMMARY);
+						result = result.replaceAll(REMOVE_HTML_REGEX, "");
+						return;
+					} else if (isSearchingForShows) {
+						// Vill man ha flera träffar söker man med "tv shows [namn på serie]"
+						if (!result.isEmpty())
+							result += ", ";
+
+						JSONObject nameOfShow = (JSONObject) serie.get(SHOW);
+						result += nameOfShow.get(NAME);
+						nrOfResultsCounted++;
+						if (nrOfResultsCounted == MAXIMUM_NUMBER_OF_RESULTS)
+							return;
+						continue;
+					} else if (isSearchingForPeople) {
+						/*
+						 * if (!result.isEmpty()) result += ", "; JSONObject nameOfPerson = (JSONObject)
+						 * serie.get(PEOPLE); result += nameOfPerson.get(NAME); nrOfResultsCounted++; if
+						 * (nrOfResultsCounted == MAXIMUM_NUMBER_OF_RESULTS) return; continue;
+						 */
+					} else {
+						result = "Detta kommando stöds inte";
+					}
+				}
+			}
 		}
-	}
-	
-	private String getResultFromHashMap(String input, HashMap<String, String> results) {
-		boolean hasKeyBeenFound = false;
-		String key = "";
-		if(hasKeyBeenFound)			
-			return key;
-		else {
-			
-			getResultFromHashMap(input, results);
-		}
-		return key;
 	}
 
 	private void formatResult(String Sender) {
