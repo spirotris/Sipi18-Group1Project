@@ -1,15 +1,5 @@
 package com.sipi.groupOne.train;
 
-/* <REQUEST>
-      <LOGIN authenticationkey="openapiconsolekey" />
-      <QUERY objecttype="TrainStation">
-            <FILTER>
-                <EQ name="AdvertisedShortLocationName" value="Luleå" />
-            </FILTER>
-      </QUERY>
-</REQUEST>
-*/
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
