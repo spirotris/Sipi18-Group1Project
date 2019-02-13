@@ -19,6 +19,8 @@ public class ChannelScreener {
                 // To make a call to the omdb api to get some movie-info
                 return new FetchMovieInfo(sender, searchString(msgArray)).getAnswer();
             case "!tv":
+            case "tv":
+            case "serie":
                 return new TVserier(sender, msgArray).getAnswer();
             case "gps":
                 return new GetGPS(sender, hostname).getInfo();
