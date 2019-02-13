@@ -61,6 +61,7 @@ public class FetchStationInfo {
         //jObject = (JSONObject) responseObjects.get(0);
 
         JSONObject responseObj = (JSONObject)jObject.get("RESPONSE");
+        System.out.println(responseObj.toString());
         JSONArray resultArray = (JSONArray)responseObj.get("RESULT");
         if(jObject.get("RESPONSE") == null || jObject.isEmpty()) {
             jsonValue = new StringBuilder("Jag hittade inga uppifter om stationen " + SEARCHVALUE);
@@ -68,6 +69,7 @@ public class FetchStationInfo {
             jsonValue = new StringBuilder("Jag hittade följande avgångar:");
             for(Object searchResults : resultArray) {
                 JSONObject o = (JSONObject)searchResults;
+                System.out.println(o.toString());
                 JSONArray resultsArr = (JSONArray)o.get("TrainAnnouncement");
                 Iterator departureItr = resultsArr.iterator();
 

@@ -1,4 +1,4 @@
-package com.sipi.groupone.remotecontrol;
+package com.sipi.groupOne.remotecontrol;
 
 import java.io.IOException;
 import java.io.PrintStream;
