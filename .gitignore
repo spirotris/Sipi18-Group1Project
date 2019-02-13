@@ -1,7 +1,9 @@
 # Project specific ignores
 
 *.properties
+*.log
 src/com/sipi/groupOne/train/xmlCalls
+
 # Created by https://www.gitignore.io/api/eclipse,netbeans,intellij
 # Edit at https://www.gitignore.io/?templates=eclipse,netbeans,intellij
 
@@ -170,6 +172,5 @@ nbdist/
 .nb-gradle/
 *.mf
 build.xml
-*.properties
 
 # End of https://www.gitignore.io/api/eclipse,netbeans,intellij

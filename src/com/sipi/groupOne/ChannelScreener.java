@@ -7,11 +7,11 @@ import com.sipi.groupOne.tv.TVserier;
 
 public class ChannelScreener {
 
-    public static String message(String sender, String msg) {
+    public static String message(String sender, String hostname, String msg) {
         // Cleaning up the chat.message to find a command to process
         // Split the message to an array of the words to extract the command
         String[] msgArray = msg.split(" ");
-        switch (msgArray[0].toLowerCase()) {           
+        switch (msgArray[0].toLowerCase()) {
             case "train":
                 // To call the api from Trafikverket to get a train-stations departure information
                 return new TrainSearch(sender, searchString(msgArray)).getAnswer();
@@ -21,8 +21,7 @@ public class ChannelScreener {
             case "!tv":
                 return new TVserier(sender, msgArray).getAnswer();
             case "gps":
-                return new GetGPS(sender,searchString(msgArray)).getInfo();
-           
+                return new GetGPS(sender, hostname).getInfo();
         }
 
         return null;
@@ -33,10 +32,11 @@ public class ChannelScreener {
     private static String searchString(String[] searchArr) {
         StringBuilder str = new StringBuilder();
         for (int i = 1; i < searchArr.length; i++) {
-            if((searchArr.length -1) != i)
-                str.append(searchArr[i] + " ");
-            else
+            if ((searchArr.length - 1) != i) {
+                str.append(searchArr[i]).append(" ");
+            } else {
                 str.append(searchArr[i]);
+            }
         }
         return str.toString();
     }
