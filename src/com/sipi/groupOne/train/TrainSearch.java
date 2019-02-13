@@ -7,6 +7,7 @@ import java.io.File;
 public class TrainSearch {
     private String APIUrl = "http://api.trafikinfo.trafikverket.se/v1.3/data.json";
     private File tempFile;
+    private String fileName;
     private String fileToSend = "src\\com\\sipi\\groupOne\\train\\xmlCalls\\";
     private final String SENDER;
     private final String SEARCHVALUE;
@@ -26,19 +27,25 @@ public class TrainSearch {
     }
 
     private void generateXMLInfo() {
-        if(!setSearchValue(SEARCHVALUE))
+        if(!checkSearchValue(SEARCHVALUE))
         {
-            fileToSend += GenerateXML.addStationXML(SEARCHVALUE);
+            fileName = GenerateXML.addStationXML(SEARCHVALUE);
 
-            fsi = new FetchStationInfo(xmlJson.tryApi(APIUrl, fileToSend), SEARCHVALUE);
-            jsonValue.append("Hej " + SENDER + "! Jag hittade: " + fsi.getAnswer());
+            if(fileName != null) {
+                fileToSend += fileName;
+                fsi = new FetchStationInfo(xmlJson.tryApi(APIUrl, fileToSend), SEARCHVALUE);
+                jsonValue.append("Hej ").append(SENDER).append("! Jag hittade: ").append(fsi.getAnswer());
+            } else {
+                jsonValue.append("Hej ").append(SENDER).append("! Jag hittade tyvärr inget!");
+                System.err.println("Fel vid skapande av fil.");
+            }
         } else {
             fileToSend += GenerateXML.addTrainXML(SEARCHVALUE);
 
         }
     }
 
-    private boolean setSearchValue(String searchValue) {
+    private boolean checkSearchValue(String searchValue) {
         try {
             Integer.parseInt(searchValue);
             return true;

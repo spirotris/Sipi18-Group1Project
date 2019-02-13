@@ -13,20 +13,24 @@ import java.util.Iterator;
 public class FetchStationInfo {
     private String APIUrl = "http://api.trafikinfo.trafikverket.se/v1.3/data.json";
     private File tempFile;
-    private String fileToSend = "src\\com\\sipi\\groupOne\\train\\xmlCalls\\leCall.txt";
+    private String fileToSend = "src\\com\\sipi\\groupOne\\train\\xmlCalls\\";
 
     private final String SEARCHVALUE;
 
     private StringBuilder jsonValue;
 
+    private JSONObject jObject;
+
     // Constructor
     public FetchStationInfo(JSONArray jsonArray, String searchValue) {
         SEARCHVALUE = searchValue;
+        jObject = (JSONObject) jsonArray.get(0);
         // Checking if the XML-file exists using init()
-        if(!init()) {
+        if(!jObject.isEmpty()) {
             sendRequest();
         } else {
-            jsonValue = new StringBuilder("Lyckades inte hitta något.");
+            jsonValue.append("Jag hittade tyvärr inget!");
+        //    jsonValue = new StringBuilder("Lyckades inte hitta något.");
         }
     }
 
@@ -49,12 +53,12 @@ public class FetchStationInfo {
     // Sending the request from the XML-file and getting the information requested from the response
     private void sendRequest() {
         // Generating the connection to the api
-        XMLtoJSONCon apiCon = new XMLtoJSONCon();
+        //XMLtoJSONCon apiCon = new XMLtoJSONCon();
         // Getting the response using choosen parameters
-        JSONArray responseObjects = apiCon.tryApi(APIUrl,fileToSend);
+        //JSONArray responseObjects = apiCon.tryApi(APIUrl,fileToSend);
 
         // Starting to work with the response
-        JSONObject jObject = (JSONObject) responseObjects.get(0);
+        //jObject = (JSONObject) responseObjects.get(0);
 
         JSONObject responseObj = (JSONObject)jObject.get("RESPONSE");
         JSONArray resultArray = (JSONArray)responseObj.get("RESULT");

@@ -14,6 +14,8 @@ public abstract class SetXML {
         this.searchValue = searchValue;
         if(initAuth()){
             generateXML();
+        } else {
+            System.err.println("Auth gav: " + auth);
         }
     }
 
@@ -23,11 +25,13 @@ public abstract class SetXML {
             File key = new File("src/com/sipi/groupOne/train/application.properties");
             BufferedReader b = new BufferedReader(new FileReader(key));
             auth = b.readLine(); // Reading in single line since it is the only thing in the file
-            return true;
+            if(auth != null)
+                return true;
         } catch (IOException e) {
             System.out.println(e.getMessage());
-            return false;
         }
+        System.err.println("Kunde ej hämta informationen från filen med auth");
+        return false;
     }
 
     public abstract Document generateXML();

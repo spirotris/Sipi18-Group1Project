@@ -29,8 +29,10 @@ class GenerateXML {
             doc = new SetXMLStationSignature(searchValue).generateXML();
         }
         if(doc != null){
-            createXML();
-            return fileName;
+            if(createXML())
+                return fileName;
+            else
+                return null;
         } else {
             return null;
         }
@@ -53,7 +55,7 @@ class GenerateXML {
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
             DOMSource source = new DOMSource(doc);
-            StreamResult result = new StreamResult(new File("src\\com\\sipi\\groupOne\\train\\xmlCalls\\" + fileName));
+            StreamResult result = new StreamResult(new File(fileToSend));
 
             transformer.transform(source, result);
 
