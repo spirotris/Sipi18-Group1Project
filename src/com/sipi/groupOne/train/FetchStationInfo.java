@@ -77,6 +77,7 @@ public class FetchStationInfo {
                 while (departureItr.hasNext()) {
                     Object departure = departureItr.next();
                     JSONObject train = (JSONObject) departure;
+                    System.out.println(train.toString());
 
                     jsonValue.append(" tåg " + train.get("AdvertisedTrainIdent") + " avgår " + train.get("AdvertisedTimeAtLocation"));
                     if(train.get("ToLocation") != null) {
@@ -87,6 +88,7 @@ public class FetchStationInfo {
                         jsonValue.append(", ");
                     }
                 }
+                System.out.println(jsonValue);
             }
         }
     }
