@@ -17,10 +17,9 @@ public class ChannelScreener {
             case "!tv":
             case "tv":
             case "serie":
-		return new TVserier(sender, msgArray).getAnswer();
+            	return new TVserier(sender, msgArray).getAnswer();
             case "help":
-                Helper helper = new Helper();
-                return "Hej " + sender + "! " + helper.getAnswer();
+                return new Helper(sender, msgArray).getAnswer();
             case "gps":
                 return new GetGPS(sender,searchString(msgArray)).getInfo();
         }
