@@ -1,7 +1,5 @@
 package com.sipi.groupOne.train;
 
-// http://api.trafikinfo.trafikverket.se/v1.3/data.json?6303830c40c8444aa528618c9ffac0d3
-
 import com.sipi.groupOne.connections.XMLtoJSONCon;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -10,63 +8,23 @@ import java.io.*;
 import java.util.Iterator;
 
 // Getting departures from Luleå-station from the API of Trafikverket
-public class FetchStationInfo {
-    private String APIUrl = "http://api.trafikinfo.trafikverket.se/v1.3/data.json";
-    private File tempFile;
-    private String fileToSend = "src\\com\\sipi\\groupOne\\train\\xmlCalls\\";
-
-    private final String SEARCHVALUE;
-
-    private StringBuilder jsonValue;
-
-    private JSONObject jObject;
+public class FetchStationInfo extends FetchInfo{
 
     // Constructor
-    public FetchStationInfo(JSONArray jsonArray, String searchValue) {
-        SEARCHVALUE = searchValue;
-        jObject = (JSONObject) jsonArray.get(0);
-        // Checking if the XML-file exists using init()
-        if(!jObject.isEmpty()) {
-            sendRequest();
-        } else {
-            jsonValue.append("Jag hittade tyvärr inget!");
-        //    jsonValue = new StringBuilder("Lyckades inte hitta något.");
-        }
-    }
 
-    // Checking if requested file exists
-    private boolean init() {
-        try{
-            tempFile = new File(fileToSend);
-            if(tempFile.exists())
-            {
-                tempFile.delete();
-            }
-            System.err.println(tempFile + " raderades för att skapa en ny.");
-            return tempFile.exists();
-        } catch (Exception e) {
-            System.out.println("Fel vid försök att ladda filen: " + e.getMessage());
-            return false;
-        }
+    public FetchStationInfo(JSONArray jsonArray, String searchValue) {
+        super(jsonArray, searchValue);
     }
 
     // Sending the request from the XML-file and getting the information requested from the response
-    private void sendRequest() {
-        // Generating the connection to the api
-        //XMLtoJSONCon apiCon = new XMLtoJSONCon();
-        // Getting the response using choosen parameters
-        //JSONArray responseObjects = apiCon.tryApi(APIUrl,fileToSend);
-
-        // Starting to work with the response
-        //jObject = (JSONObject) responseObjects.get(0);
-
+    protected void sendRequest() {
         JSONObject responseObj = (JSONObject)jObject.get("RESPONSE");
         System.out.println(responseObj.toString());
         JSONArray resultArray = (JSONArray)responseObj.get("RESULT");
         if(jObject.get("RESPONSE") == null || jObject.isEmpty()) {
-            jsonValue = new StringBuilder("Jag hittade inga uppifter om stationen " + SEARCHVALUE);
+            jsonValue.append("Jag hittade inga uppifter om stationen " + SEARCHVALUE);
         } else {
-            jsonValue = new StringBuilder("Jag hittade följande avgångar:");
+            jsonValue.append("Jag hittade följande avgångar:");
             for(Object searchResults : resultArray) {
                 JSONObject o = (JSONObject)searchResults;
                 System.out.println(o.toString());
@@ -91,10 +49,6 @@ public class FetchStationInfo {
                 System.out.println(jsonValue);
             }
         }
-    }
-
-    public String getAnswer() {
-        return jsonValue.toString();
     }
 }
 

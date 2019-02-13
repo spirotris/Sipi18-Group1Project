@@ -2,18 +2,18 @@ package com.sipi.groupOne.train;
 
 import com.sipi.groupOne.connections.XMLtoJSONCon;
 
-import java.io.File;
-
 public class TrainSearch {
     private String APIUrl = "http://api.trafikinfo.trafikverket.se/v1.3/data.json";
     private String fileName;
-    private String fileToSend = "src\\com\\sipi\\groupOne\\train\\xmlCalls\\";
+    private String filePath = "src\\com\\sipi\\groupOne\\train\\xmlCalls\\";
+    private String fileToSend;
     private final String SENDER;
-    private final String SEARCHVALUE;
+    private String searchvalue;
 
     XMLtoJSONCon xmlJson = new XMLtoJSONCon();
 
     FetchStationInfo fsi;
+    FetchStationSignature fss;
 
 
     private StringBuilder jsonValue = new StringBuilder();
@@ -21,25 +21,38 @@ public class TrainSearch {
     // Constructor
     public TrainSearch(String sender, String searchValue) {
         SENDER = sender;
-        SEARCHVALUE = searchValue;
+        searchvalue = searchValue;
         generateXMLInfo();
     }
 
     private void generateXMLInfo() {
-        if(!checkSearchValue(SEARCHVALUE))
+        if(!checkSearchValue(searchvalue))
         {
-            fileName = GenerateXML.addStationXML(SEARCHVALUE);
+            // Loop until jsonValue has a value
+            while (jsonValue.length() == 0) {
 
-            if(fileName != null) {
-                fileToSend += fileName;
-                fsi = new FetchStationInfo(xmlJson.tryApi(APIUrl, fileToSend), SEARCHVALUE);
-                jsonValue.append("Hej " + SENDER + "! " + fsi.getAnswer());
+                // If the searchvalue is less then 5 its most likely a station signature and a request for departures is possible
+                if (searchvalue.length() < 5) {
+                    fileName = GenerateXML.addStationXML(searchvalue);
+                    fileToSend = filePath + fileName;
+                    fsi = new FetchStationInfo(xmlJson.tryApi(APIUrl, fileToSend), searchvalue);
+                    jsonValue.append("Hej " + SENDER + "! " + fsi.getAnswer());
+                } else {
+                    // If searchvalue is longer the trying to find tha signature to be able to make a request
+                    fileName = GenerateXML.addStationXML(searchvalue);
+                    fileToSend = filePath + fileName;
+                    searchvalue = new FetchStationSignature(xmlJson.tryApi(APIUrl, fileToSend), searchvalue).getAnswer();
+                }
+            }
+            if (fileName != null) {
+                System.out.println("fileName not null = " + fileName);
             } else {
+                System.out.println(xmlJson.tryApi(APIUrl, fileToSend).toString());
                 jsonValue.append("Hej " + SENDER + "! Jag hittade tyvärr inget!");
                 System.err.println("Fel vid skapande av fil.");
             }
         } else {
-            fileToSend += GenerateXML.addTrainXML(SEARCHVALUE);
+            fileToSend += GenerateXML.addTrainXML(searchvalue);
 
         }
     }

@@ -26,7 +26,7 @@ public class SetXMLTrain extends SetXML{
             Element auth = doc.createElement("LOGIN");
             rootElement.appendChild(auth);
 
-            auth.setAttribute("authenticationkey", String.valueOf(auth));
+            auth.setAttribute("authenticationkey", this.auth);
 
             // The QUERY Contains what you request
             Element query = doc.createElement("QUERY");
@@ -45,18 +45,6 @@ public class SetXMLTrain extends SetXML{
             // States which train number you want to get info about
             eq.setAttribute("name", "AdvertisedTrainIdent");
             eq.setAttribute("value", searchValue);
-
-            /*
-            // Write the information to xml-file
-            TransformerFactory transformerFactory = TransformerFactory.newInstance();
-            Transformer transformer = transformerFactory.newTransformer();
-            DOMSource source = new DOMSource(doc);
-            StreamResult result = new StreamResult(new File("src\\com\\sipi\\groupOne\\train\\xmlCalls\\trainCall.xml"));
-
-            transformer.transform(source, result);
-
-            System.out.println("Filen Sparad!");
-            */
 
             return doc;
 

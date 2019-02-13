@@ -67,17 +67,4 @@ class GenerateXML {
             return false;
         }
     }
-
-    /*
-    // Checking if requested file exists
-    private static boolean init() {
-        try{
-            tempFile = new File(fileToSend);
-            return tempFile.exists();
-        } catch (Exception e) {
-            System.err.println("Fel vid försök att ladda filen: " + e.getMessage());
-            return false;
-        }
-    }
-    */
 }

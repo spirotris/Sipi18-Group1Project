@@ -28,7 +28,7 @@ public class SetXMLStationSignature extends SetXML {
             Element auth = doc.createElement("LOGIN");
             rootElement.appendChild(auth);
 
-            auth.setAttribute("authenticationkey", String.valueOf(auth));
+            auth.setAttribute("authenticationkey", this.auth);
 
             // The QUERY Contains what you request
             Element query = doc.createElement("QUERY");
