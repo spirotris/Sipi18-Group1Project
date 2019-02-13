@@ -1,15 +1,16 @@
-/**
+/*
  * Authors: Tommy Ohrling & Marcus Laitala
+ * Date: 2019-02-13
  */
 package com.sipi.groupOne.help;
 
 public class Helper {
-    private String time = "time - tar fram aktuell tid";
-    private String omdbApi = "movie - söker efter filmtitlar med önskat sökord";
-    private String tvMaze = "serie - söker efter serier på olika sätt";
-    private String gpsApi = "gps - söker efter position där önskat ip befinner sig";
+    private String time = "!time - visar aktuell tid";
+    private String omdbApi = "!movie - söker filmtitlar med önskat sökord";
+    private String tvMaze = "!tv - söker serier på olika sätt";
+    private String gpsApi = "!gps - söker position där önskat ip befinner sig";
     
-    private final String HOWTO = " en sökning är uppbyggd på följande sätt: <Vad du söker> <Sök-kommando>. " + time + ", " + omdbApi + ", " + tvMaze + ", " + gpsApi;
+    private final String HOWTO = " sökning görs med: <Vad du söker> <Sök-kommando>. " + time + ", " + omdbApi + ", " + tvMaze + ", " + gpsApi;
     private static final String HELLO = "Hej ";    
     
     String sender;
