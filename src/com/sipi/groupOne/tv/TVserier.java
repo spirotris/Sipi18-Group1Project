@@ -1,7 +1,7 @@
 /*
- * Source for API info: https://www.tvmaze.com/api
+ * API info: https://www.tvmaze.com/api
  * Author: Marcus Laitala
- * Date: 2019-01-17 
+ * Date: 2019-01-17
  */
 
 package com.sipi.groupOne.tv;
@@ -16,27 +16,40 @@ import org.json.simple.JSONObject;
 
 public class TVserier {
 
+	// private static final String REMOVE_HTML_REGEX = "(<.*?>)|(&.*?;)|([ ]{2,})";
+	// //In case we want to get the summary or other results which have html code in
+	// them and want to get rid of it
+
 	private static URL linkToAPI;
 	private static final String API = "API";
 	private static final String NAME_OF_API_HOST_SITE = "TV MAZE";
 	private static final String EMBED = "&embed=";
 	private static final String SEARCH = "search/";
 	private static final String QUERY = "?q=";
-	private static final String SHOW = "show", SHOWS = "shows", PEOPLE = "people", PERSON = "person", BIRTHDAY="birthday", NAME = "name",
-			SUMMARY = "summary", SINGLE_SEARCH = "single";
+	private static final String SHOW = "show", SHOWS = "shows", PEOPLE = "people", PERSON = "person",
+			BIRTHDAY = "birthday", NAME = "name", URL_SHOW = "url", SINGLE_SEARCH = "single";
+	private static final String WAS_BORN = "Födelsedag: ";
 	private static final String MANUAL = "Använder API från " + NAME_OF_API_HOST_SITE
 			+ " för att svara på frågor. Skriv API för länk till den. Exempel på användning: tv show [namn på show] eller tv people [namn på person]";
 	private static final String ERROR_NOT_ENOUGH_KEYWORDS = "Behöver fler nyckelord för att utföra en sökning. Skriv ? eller hjälp för mer inforamtion";
 	private static final String SHOW_MANUAL = "?", SHOW_MANUAL2 = "help";
-	private static final String EMPTY_RESULT = "Jag fick inga svar med den sökningen!";
-	private static final String TOO_MANY_PARAMETERS = "För många nyckelord eller så har jag inte stöd för dessa ord";
-	private static final String REMOVE_HTML_REGEX = "(<.*?>)|(&.*?;)|([ ]{2,})";
+	private static final String TOO_MANY_PARAMETERS = " för många nyckelord eller så har jag inte stöd för dessa ord";
 
-	private static final int FIRST_ARGUMENT = 1, SECOND_ARGUMENT = 2, THIRD_ARGUMENT = 3, MINIMUM_ARGUMENTS = 2,
-			MIDDLE_VALUE_ARGUMENTS = 3, MAXIMUM_ARGUMENTS = 4, MAXIMUM_NUMBER_OF_RESULTS = 10;
+	private static final String SHOWING_FIRST_TEN_RESULTS = " visar de 10 första resultaten, var mer specifik för att få färre";
+	private static final String ONLY_FOUND_ONE_RESULT = "bara 1 resultat: ";
+	private static final String EMPTY_RESULT = " Jag fick inga svar med den sökningen!";
+	private static final String I_FOUND = " Jag hittade ";
+	private static final String RESULTS = " resultat";
+	private static final String HELLO = "Hej ";
 
-	private static String searchValue = "";
-	private static String result = "";
+	private static final int FIRST_ARGUMENT = 1, SECOND_ARGUMENT = 2, THIRD_ARGUMENT = 3, FOURTH_ARGUMENT = 4,
+			MINIMUM_ARGUMENTS = 2, MIDDLE_VALUE_ARGUMENTS = 3, MAXIMUM_ARGUMENTS = 5, MAXIMUM_NUMBER_OF_RESULTS = 10,
+			ONLY_ONE_RESULT = 1;
+
+	private String searchValue;
+	private static String result;
+
+	private static int numberOfResults;
 
 	private static boolean isResultEmpty = true;
 	private static boolean isAskingForManual = false;
@@ -48,13 +61,15 @@ public class TVserier {
 	private static boolean isSearchingForMultiple = false;
 
 	public TVserier(String sender, String[] searchValue) {
-
 		try {
 			linkToAPI = new URL("https://api.tvmaze.com/");
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
 		try {
+			result = "";
+			this.searchValue = "";
+			numberOfResults = 0;
 			// Check and sort the parameters
 			sortSearch(searchValue);
 
@@ -141,10 +156,16 @@ public class TVserier {
 				isSearchingForPeople = true;
 			}
 			break;
+		case MAXIMUM_ARGUMENTS - 1:
 		case MAXIMUM_ARGUMENTS:
 			if (keywords[FIRST_ARGUMENT].toLowerCase().contains(PEOPLE)
 					|| keywords[FIRST_ARGUMENT].toLowerCase().contains(PERSON)) {
-				searchValue = SEARCH + PEOPLE + QUERY + keywords[SECOND_ARGUMENT] + keywords[THIRD_ARGUMENT];
+				if (keywords.length == MAXIMUM_ARGUMENTS - 1) // -1 and maximum has the same code, no need to do it
+																// twice
+					searchValue = SEARCH + PEOPLE + QUERY + keywords[SECOND_ARGUMENT] + "-" + keywords[THIRD_ARGUMENT];
+				else // For when searching for people with three names
+					searchValue = SEARCH + PEOPLE + QUERY + keywords[SECOND_ARGUMENT] + "-" + keywords[THIRD_ARGUMENT]
+							+ "-" + keywords[FOURTH_ARGUMENT];
 				isSearchValid = true;
 				isAskingForManual = false;
 				isSearchingForMultiple = true;
@@ -164,88 +185,137 @@ public class TVserier {
 		}
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings("unchecked")
 	private void jsonResponse() {
 		String json = linkToAPI + searchValue;
 		JSONCon tvmazeAPI = new JSONCon();
 		JSONArray responseObjects = tvmazeAPI.tryApi(json);
 
-		if (isAnswerEmpty(responseObjects))	 {			
+		if (isAnswerEmpty(responseObjects)) {
 			return;
 		} else {
-			isResultEmpty = false;
 			// Picks the first row from the api-response
 			for (Object searchResults : responseObjects) {
-				JSONArray resultsArr = null;
-				JSONObject resultObj;
-				Iterator serieItr;
-				int nrOfResultsCounted = 0;
-
-				if (isSearchingForMultiple) {
-					resultsArr = (JSONArray) searchResults;
-					serieItr = resultsArr.iterator();
-				} else {
-					resultObj = (JSONObject) searchResults;
-					resultsArr = new JSONArray();
-					resultsArr.add(resultObj);
-					serieItr = resultsArr.iterator();
-				}
-
-				// Iterates through the map to get the information i want
-				while (serieItr.hasNext()) {
-
-					Object slide = serieItr.next();
-					JSONObject serie = (JSONObject) slide;
-					System.out.println(serie.toJSONString());
-					if (isSearchingForShow) {
-						// Visar serien och en beskrivninga för bästa träffen av sökresultatet
-						result += serie.get(NAME) + ": " + serie.get(SUMMARY);
-						result = result.replaceAll(REMOVE_HTML_REGEX, "");
-						return;
-					} else if (isSearchingForShows) {
-						// Vill man ha flera träffar söker man med "tv shows [namn på serie]"
-						if (!result.isEmpty())
-							result += ", ";
-
-						JSONObject nameOfShow = (JSONObject) serie.get(SHOW);
-						result += nameOfShow.get(NAME);
-						nrOfResultsCounted++;
-						if (nrOfResultsCounted == MAXIMUM_NUMBER_OF_RESULTS)
-							return;
-						continue;
-					} else if (isSearchingForPeople) {
-						if (!result.isEmpty())
-							result += ", ";
-						JSONObject nameOfPerson = (JSONObject) serie.get(PERSON);
-						result += nameOfPerson.get(NAME).toString() + nameOfPerson.get(BIRTHDAY).toString();
-						nrOfResultsCounted++;
-						if (nrOfResultsCounted == MAXIMUM_NUMBER_OF_RESULTS)
-							return;
-						continue;
-
+				// är det bara ett jsonobject i searchresults är det bara 1 resultat
+				if (searchResults.getClass() == JSONArray.class) {
+					if (((JSONArray) searchResults).size() == ONLY_ONE_RESULT) {
+						isSearchingForMultiple = false;
+						numberOfResults = ((JSONArray) searchResults).size();
+						searchResults = (JSONObject)((JSONArray)(searchResults)).get(0);
 					} else {
-						result = "Detta kommando stöds inte";
+					numberOfResults = ((JSONArray) searchResults).size();
+					searchResults = (JSONArray) searchResults;
 					}
+				} else if (searchResults.getClass() == JSONObject.class) {
+					// If we receive an JSONObject instead of an JSONArray we know we only got 1
+					// result
+					isSearchingForMultiple = false;
+					numberOfResults = ONLY_ONE_RESULT;
+					searchResults = (JSONObject) searchResults;
 				}
+
+				Iterator<?> serieItr;
+
+				if (isSearchingForMultiple)
+					serieItr = ((JSONArray) searchResults).iterator();
+				else { // TODO Work-around until I figure out how to travel/search in both JSONArray
+						// and JSONObjects effectively
+					JSONArray resultsArr = new JSONArray();
+					resultsArr.add(searchResults);
+					serieItr = resultsArr.iterator();
+				}
+				try {
+					handleResponse(serieItr);
+				} catch (Exception e) {
+					System.err.println();
+				}
+
 			}
 		}
 	}
-	
+
+	private void handleResponse(Iterator<?> serieItr) {
+		int nrOfResultsCounted = 0;
+		// Iterates through the map to get the information i want
+		while (serieItr.hasNext()) {
+
+			Object slide = serieItr.next();
+			JSONObject serie = (JSONObject) slide;
+			System.out.println(serie.toJSONString());
+			if (isSearchingForShow) {
+				// Visar serien och en beskrivninga för bästa träffen av sökresultatet
+				result += serie.get(NAME) + ": " + serie.get(URL_SHOW);
+				return;
+			} else if (isSearchingForShows) {
+				// Vill man ha flera träffar söker man med "tv shows [namn på serie]"
+				if (!result.isEmpty())
+					result += ", ";
+
+				JSONObject nameOfShow = (JSONObject) serie.get(SHOW);
+				result += nameOfShow.get(NAME);
+				nrOfResultsCounted++;
+				if (nrOfResultsCounted == MAXIMUM_NUMBER_OF_RESULTS)
+					return;
+				continue;
+			} else if (isSearchingForPeople) {
+				if (!result.isEmpty())
+					result += ", ";
+				JSONObject nameOfPerson = (JSONObject) serie.get(PERSON);
+				result += nameOfPerson.get(NAME).toString() + ", " + WAS_BORN + nameOfPerson.get(BIRTHDAY).toString();
+				if (isSearchingForMultiple)
+					nrOfResultsCounted++;
+				else
+					return;
+				if (nrOfResultsCounted == MAXIMUM_NUMBER_OF_RESULTS)
+					return;
+				continue;
+
+			} else {
+				result = "Detta kommando stöds inte";
+			}
+		}
+	}
+
 	private boolean isAnswerEmpty(JSONArray Answer) {
 		for (int i = 0; i < Answer.size(); i++) {
-			if(((JSONObject)Answer.get(i)).isEmpty() || ((JSONObject)Answer.get(i)) == null) {
-				isResultEmpty = true;
-				return true;
+			try { // Did we get an array in an array?
+				if (Answer.get(i).getClass() == JSONArray.class)
+					if (((JSONArray) Answer.get(i)).isEmpty()) {
+						isResultEmpty = true;
+						return true;
+					} else {
+						isResultEmpty = false;
+						return false;
+					}
+			} catch (Exception e) {
+				System.err.println();
+			}
+		}
+		for (int i = 0; i < Answer.size(); i++) {
+			try { // Did we get an array with one or more objects?
+				if (((JSONObject) Answer.get(i)).isEmpty() || ((JSONObject) Answer.get(i)) == null) {
+					isResultEmpty = true;
+					return true;
+				} else {
+					isResultEmpty = false;
+					return false;
+				}
+			} catch (Exception e) {
+				System.err.println();
 			}
 		}
 		return false;
 	}
 
 	private void formatResult(String Sender) {
-		if (isResultEmpty)
-			result = "Hej " + Sender + "!" + EMPTY_RESULT;
+		if (!isSearchValid)
+			result = HELLO + Sender + result;
+		else if (isResultEmpty)
+			result = HELLO + Sender + EMPTY_RESULT;
+		else if (isSearchingForMultiple)
+			result = HELLO + Sender + I_FOUND + numberOfResults + RESULTS + SHOWING_FIRST_TEN_RESULTS + result;
 		else
-			result = "Hej " + Sender + "! Jag hittade " + result;
+			result = HELLO + Sender + I_FOUND + ONLY_FOUND_ONE_RESULT + result;
 	}
 
 	public String getAnswer() {
