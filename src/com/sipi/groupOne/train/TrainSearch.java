@@ -13,8 +13,7 @@ public class TrainSearch {
     XMLtoJSONCon xmlJson = new XMLtoJSONCon();
 
     FetchStationInfo fsi;
-    FetchStationSignature fss;
-
+    FetchTrainInfo fti;
 
     private StringBuilder jsonValue = new StringBuilder();
 
@@ -52,8 +51,10 @@ public class TrainSearch {
                 System.err.println("Fel vid skapande av fil.");
             }
         } else {
-            fileToSend += GenerateXML.addTrainXML(searchvalue);
-
+            fileName = GenerateXML.addTrainXML(searchvalue);
+            fileToSend = filePath + fileName;
+            fti = new FetchTrainInfo(xmlJson.tryApi(APIUrl,fileToSend), searchvalue);
+            jsonValue.append("Hej " + SENDER + "! " + fti.getAnswer());
         }
     }
 

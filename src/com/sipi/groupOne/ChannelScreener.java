@@ -19,13 +19,13 @@ public class ChannelScreener {
                 // To make a call to the omdb api to get some movie-info           
                 return new FetchMovieInfo(sender, searchString(msgArray)).getAnswer();
             case "!tv":
-            case "!tv":
             case "!serie":
+                // To make a call to the TVMaze-api to get info about series
                 return new TVserier(sender, msgArray).getAnswer();
             case "!gps":
+                // To make a call to the freegeoip-api to get tha position of the users IP
                 return new GetGPS(sender,searchString(msgArray)).getInfo();
         }
-
         return null;
     }
 

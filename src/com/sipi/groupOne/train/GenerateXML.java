@@ -9,6 +9,8 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import java.io.File;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 // TODO: 2019-02-12 Ta bort fileToSend?
 
@@ -38,9 +40,11 @@ class GenerateXML {
         }
     }
     public static String addTrainXML(String searchValue) {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate localDate = LocalDate.now();
         fileName = searchValue + "Call.xml";
         fileToSend = path + fileName;
-        doc = new SetXMLTrain(searchValue).generateXML();
+        doc = new SetXMLTrain(searchValue, dtf.format(localDate)).generateXML();
         if(doc != null){
             createXML();
             return fileName;

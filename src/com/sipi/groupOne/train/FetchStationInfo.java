@@ -17,7 +17,7 @@ public class FetchStationInfo extends FetchInfo{
     }
 
     // Sending the request from the XML-file and getting the information requested from the response
-    protected void sendRequest() {
+    protected void getResponse() {
         JSONObject responseObj = (JSONObject)jObject.get("RESPONSE");
         System.out.println(responseObj.toString());
         JSONArray resultArray = (JSONArray)responseObj.get("RESULT");
