@@ -12,18 +12,18 @@ public class ChannelScreener {
         // Split the message to an array of the words to extract the command
         String[] msgArray = msg.split(" ");
         switch (msgArray[0].toLowerCase()) {
-            case "train":
+            case "!train":
                 // To call the api from Trafikverket to get a train-stations departure information
                 return new TrainSearch(sender, searchString(msgArray)).getAnswer();
-            case "movie":
-                // To make a call to the omdb api to get some movie-info
+            case "!movie":
+                // To make a call to the omdb api to get some movie-info           
                 return new FetchMovieInfo(sender, searchString(msgArray)).getAnswer();
             case "!tv":
-            case "tv":
-            case "serie":
+            case "!tv":
+            case "!serie":
                 return new TVserier(sender, msgArray).getAnswer();
-            case "gps":
-                return new GetGPS(sender, hostname).getInfo();
+            case "!gps":
+                return new GetGPS(sender,searchString(msgArray)).getInfo();
         }
 
         return null;
