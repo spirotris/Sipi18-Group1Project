@@ -9,8 +9,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
-// TODO: 2019-02-08 Kör lite trackback på Copy för att förstå vad som händer - behövs det ens?
-
 // Calls API from trafikverket using a XML-file getting answer in JSON-format
 public class XMLtoJSONCon {
 
