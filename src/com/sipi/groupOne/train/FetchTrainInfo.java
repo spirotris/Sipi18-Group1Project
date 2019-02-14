@@ -16,25 +16,27 @@ public class FetchTrainInfo extends FetchInfo {
         JSONObject responseObj = (JSONObject)jObject.get("RESPONSE");
         System.out.println(responseObj.toString());
         JSONArray resultArray = (JSONArray)responseObj.get("RESULT");
-        if(jObject.get("RESPONSE") == null || jObject.isEmpty()) {
+        if(resultArray.get(0) == null || jObject.isEmpty()) {
             jsonValue.append("Jag hittade inga uppifter om tåg " + SEARCHVALUE);
         } else {
-            jsonValue.append("Information:");
             for(Object searchResults : resultArray) {
                 JSONObject o = (JSONObject)searchResults;
                 System.out.println(o.toString());
                 JSONArray resultsArr = (JSONArray)o.get("TrainAnnouncement");
-                Iterator stationItr = resultsArr.iterator();
-
-                // Iterates through the results to find the first movie and print it out
-                while (stationItr.hasNext()) {
-                    Object stationObj = stationItr.next();
-                    JSONObject station = (JSONObject) stationObj;
-                    System.out.println(station.get("LocationSignature").toString());
+                if(!resultsArr.isEmpty()) {
+                    // If the response isn't empty, the response is checked and writes out
+                    JSONObject station = (JSONObject) resultsArr.get(0);
                     LocalDateTime advertisedTime = LocalDateTime.parse(station.get("AdvertisedTimeAtLocation").toString());
-                    System.out.println(advertisedTime);
+                    LocalDateTime timeAtLocation = LocalDateTime.parse(station.get("TimeAtLocation").toString());
+                    long minutesDiff = advertisedTime.compareTo(timeAtLocation); // Finds out how the arrival-time differs from the scheldued time
+                    jsonValue.append("Tåg " + SEARCHVALUE + " ankom " + station.get("LocationSignature") + " med en diff på " + minutesDiff + " mot tidtabell.");
+                    //}
+                    System.out.println(jsonValue);
                 }
-                System.out.println(jsonValue);
+                else {
+                    jsonValue.append("Jag hittade inga uppifter om tåg " + SEARCHVALUE);
+
+                }
             }
         }
     }
