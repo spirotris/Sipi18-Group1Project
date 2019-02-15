@@ -1,6 +1,6 @@
 # Sipi18-Group1Project
 
-Här bygger vi en IRC bot som använder sig av Java APIt PircBot. Botten kommer att kunna söka information från olika öppna API:er. För att tillkalla bottens uppmärksamhet och få ett svar så skriver man i irc `!<kommando> <sök-värde>`, som exempel `tv suits`.
+Här bygger vi en IRC bot som använder sig av Java APIt PircBot. Botten kommer att kunna söka information från olika öppna API:er. För att tillkalla bottens uppmärksamhet och få ett svar så skriver man i irc `!<kommando> <sök-värde>`, som exempel `!tv suits`.
 
 
 
