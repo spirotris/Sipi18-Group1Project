@@ -13,3 +13,12 @@ Här bygger vi en IRC bot som använder sig av Java APIt PircBot. Botten kommer 
 
 
 URL till API-PircBot som hela projektet kretsar kring: http://www.jibble.org/javadocs/pircbot/index.html
+
+
+
+### Examples of BotProject GUI
+Window presented to the user at launch<br>
+![Setup Window](https://github.com/spirotris/Sipi18-Group1Project/blob/gui-test/res/gfx/setupwindow.png)
+
+Once launched and successfully joined an IRC channel<br>
+![Main Window](https://github.com/spirotris/Sipi18-Group1Project/blob/gui-test/res/gfx/mainwindow.png)

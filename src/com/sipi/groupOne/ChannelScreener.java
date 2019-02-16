@@ -21,6 +21,7 @@ public class ChannelScreener {
                 return new TVserier(sender, msgArray).getAnswer();
             case "!gps":
                 return new GetGPS(sender,searchString(msgArray)).getInfo();
+           
         }
 
         return null;
