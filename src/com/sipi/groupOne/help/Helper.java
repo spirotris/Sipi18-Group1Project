@@ -4,26 +4,27 @@
  */
 package com.sipi.groupOne.help;
 
+// For the function !help
+// Describes the different searches the bot can do
 public class Helper {
-    private String time = "!time - visar aktuell tid";
-    private String omdbApi = "!movie - söker efter filmtitlar";
-    private String tvMaze = "!tv - söker serier på olika sätt";
-    private String gpsApi = "!gps - söker position där önskat ip befinner sig";
+    private final String OMDBAPI = "!movie - söker efter filmtitlar";
+    private final String TVMAZE = "!tv - söker serier på olika sätt";
+    private final String GPSAPI = "!gps - söker position där önskat ip befinner sig";
     
-    private final String HOWTO = " sökning görs med: <Vad du söker> <Sök-kommando>. " + time + ", " + omdbApi + ", " + tvMaze + ", " + gpsApi;
+    private final String HOWTO = " sökning görs med: <Vad du söker> <Sök-kommando>. , " + OMDBAPI + ", " + TVMAZE + ", " + GPSAPI;
     private static final String HELLO = "Hej ";    
     
-    String sender;
-    String[] msgArray;
+    private final String SENDER;
+    private String[] msgArray;
     
     public Helper(String sender, String[] msgArray) {
-    	this.sender = sender;
+    	this.SENDER = sender;
     	
     	//Vet inte vad denna ska användas till än, men kan vara bra att ha
     	this.msgArray = msgArray;
     }
 
     public String getAnswer() {
-        return  HELLO + sender + HOWTO;
+        return  HELLO + SENDER + HOWTO;
     }
 }
