@@ -1,66 +1,80 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package com.sipi.groupOne.gps;
 
 /**
  *
  * @author mbutt
  */
+import java.io.BufferedReader;
+import java.io.Reader;
+import java.net.URL;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
+import java.nio.charset.Charset;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
+import org.json.simple.JSONObject;
 
 public class GetGPS {
 
-    private StringBuilder outputMsg = new StringBuilder();
-    private String USER;
-    private String HOST;
+    private JSONObject jsonObject;
+    private final String URL_IN = "https://freegeoip.app/json/";
+    private String resultStr;
+    private String SEARCHVALUE;
+    private String SENDER;
 
-    public GetGPS(String sender, String hostname) {
-        USER = sender;
+    public GetGPS(String sender, String searchValue) {
+        SEARCHVALUE = searchValue;
+        SENDER = sender;
+
+        GPSinfo();
+    }
+
+    private String readAll(Reader read) {
+        int count;
+        StringBuilder value = new StringBuilder();
         try {
-            HOST = InetAddress.getByName(hostname).getHostAddress();
-        } catch (UnknownHostException e) {
-            System.err.println("UnknownHostException: " + e.getLocalizedMessage());
-            outputMsg.append("");
-            return;
+            while ((count = read.read()) != -1) {
+                value.append((char) count);
+            }
+        } catch (IOException e) {
+            System.err.println(e.getLocalizedMessage());
+            return "Fel!";
         }
+        return value.toString();
+    }
 
-        try {
-            OkHttpClient client = new OkHttpClient();
-            Request request = new Request.Builder()
-                    .url("https://freegeoip.app/json/" + HOST)
-                    .get()
-                    .addHeader("accept", "application/json")
-                    .addHeader("content-type", "application/json")
-                    .build();
-            Response response = client.newCall(request).execute();
-            String jsonStr = response.body().string();
+    private JSONObject readJsonFromUrl(String url) {
+        JSONParser parser = new JSONParser();
 
-            JSONObject jsonObj = (JSONObject) new JSONParser().parse(jsonStr);
+        try (InputStream inputstrm = new URL(url).openStream()) {
+            BufferedReader buffread = new BufferedReader(new InputStreamReader(inputstrm, Charset.forName("UTF-8")));
+            String jsontext = readAll(buffread);
 
-            outputMsg.append("Hej ").append(USER)
-                    .append(", Du har IP :").append(jsonObj.get("ip"))
-                    .append(", bor i landet ").append(jsonObj.get("country_name"))
-                    .append(" i regionen ").append(jsonObj.get("region_name"))
-                    .append(" i staden ").append(jsonObj.get("city"))
-                    .append(" med postnummer ").append(jsonObj.get("zip_code"));
-
+            jsonObject = (JSONObject) parser.parse(jsontext);
         } catch (ParseException | IOException e) {
-            System.err.println("Parse/IO Exception: " + e.getLocalizedMessage());
+            System.err.println(e.getLocalizedMessage());
         }
+        return jsonObject;
+    }
+
+    private void GPSinfo() {
+        jsonObject = readJsonFromUrl(URL_IN);
+
+        resultStr = ("Hej " + SENDER
+                + ", Du har IP :" + jsonObject.get("ip")
+                + ", bor i landet " + jsonObject.get("country_name")
+                + " i regionen " + jsonObject.get("region_name")
+                + " i staden " + jsonObject.get("city")
+                + " med postnummer " + jsonObject.get("zip_code"));
     }
 
     public String getInfo() {
-        if (!outputMsg.toString().isEmpty()) {
-            return outputMsg.toString();
-        } else {
-            return "Unable to find GPS information.";
-        }
-
+        return resultStr;
     }
 }
