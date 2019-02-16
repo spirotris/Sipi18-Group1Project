@@ -18,7 +18,7 @@ URL till API-PircBot som hela projektet kretsar kring: http://www.jibble.org/jav
 
 ### Examples of BotProject GUI
 Window presented to the user at launch<br>
-![Setup Window](https://github.com/spirotris/Sipi18-Group1Project/blob/gui-test/res/gfx/setupwindow.png)
+![Setup Window](https://github.com/spirotris/Sipi18-Group1Project/blob/master/res/gfx/setupwindow.png)
 
 Once launched and successfully joined an IRC channel<br>
-![Main Window](https://github.com/spirotris/Sipi18-Group1Project/blob/gui-test/res/gfx/mainwindow.png)
+![Main Window](https://github.com/spirotris/Sipi18-Group1Project/blob/master/res/gfx/mainwindow.png)
