@@ -38,7 +38,7 @@ public class BotProject extends PircBot implements Runnable {
     @Override
     public void onMessage(String channel, String sender,
             String login, String hostname, String message) {
-        String searchResult = ChannelScreener.message(sender, message);
+        String searchResult = ChannelScreener.message(sender, hostname, message);
         ui.setChatMessage(sender, message);
         if (searchResult != null) {
             sendMessage(channel, searchResult);
