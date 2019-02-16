@@ -6,7 +6,7 @@ package com.sipi.groupOne.help;
 
 public class Helper {
     private String time = "!time - visar aktuell tid";
-    private String omdbApi = "!movie - söker filmtitlar med önskat sökord";
+    private String omdbApi = "!movie - söker efter filmtitlar";
     private String tvMaze = "!tv - söker serier på olika sätt";
     private String gpsApi = "!gps - söker position där önskat ip befinner sig";
     
