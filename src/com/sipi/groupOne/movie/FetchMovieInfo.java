@@ -22,7 +22,6 @@ public class FetchMovieInfo {
     public FetchMovieInfo(String sender, String searchValue) {
         SEARCHVALUE = searchValue;
         SENDER = sender;
-        System.out.println(searchValue);
         if(SEARCHVALUE.toLowerCase().equals("!help")) {
             // The user want help and the help-string is set
             jsonValue.append(sender + "! " + HELPSTRING);
