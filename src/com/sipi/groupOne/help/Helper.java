@@ -9,9 +9,11 @@ package com.sipi.groupOne.help;
 public class Helper {
     private final String OMDBAPI = "!movie - söker efter filmtitlar";
     private final String TVMAZE = "!tv - söker serier på olika sätt";
-    private final String GPSAPI = "!gps - söker position där önskat ip befinner sig";
+    private final String GPSAPI = "!gps - hämtar position där ditt ip befinner sig";
+
+    private final String README = "https://github.com/spirotris/Sipi18-Group1Project/blob/master/README.md";
     
-    private final String HOWTO = " sökning görs med: <Vad du söker> <Sök-kommando>. , " + OMDBAPI + ", " + TVMAZE + ", " + GPSAPI;
+    private final StringBuilder HOWTO = new StringBuilder(" sökning görs med: <Vad du söker> <Sök-kommando>. , " + OMDBAPI + ", " + TVMAZE + ", " + GPSAPI + ". För mer information: " + README);
     private static final String HELLO = "Hej ";    
     
     private final String SENDER;
