@@ -2,10 +2,8 @@ package com.sipi.groupOne;
 
 import com.sipi.groupOne.movie.FetchMovieInfo;
 import com.sipi.groupOne.gps.GetGPS;
-<<<<<<< HEAD
-=======
 import com.sipi.groupOne.tv.TVserier;
->>>>>>> master
+
 
 public class ChannelScreener {
 
