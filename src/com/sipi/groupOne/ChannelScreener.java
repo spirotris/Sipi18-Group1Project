@@ -11,13 +11,13 @@ public class ChannelScreener {
         // Split the message to an array of the words to extract the command
         String[] msgArray = msg.split(" ");
         switch (msgArray[0].toLowerCase()) {           
-            case "movie":
+            case "!movie":
                 return new FetchMovieInfo(sender, searchString(msgArray)).getAnswer();
             case "!tv":
-            case "tv":
-            case "serie":
+            case "!tv":
+            case "!serie":
                 return new TVserier(sender, msgArray).getAnswer();
-            case "gps":
+            case "!gps":
                 return new GetGPS(sender,searchString(msgArray)).getInfo();
            
         }
