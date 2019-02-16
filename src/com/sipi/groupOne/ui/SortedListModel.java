@@ -7,6 +7,10 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import javax.swing.AbstractListModel;
 
+/**
+ *
+ * @author SpiroTris
+ */
 public class SortedListModel extends AbstractListModel {
 
     private SortedSet model;

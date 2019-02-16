@@ -4,10 +4,13 @@ import com.sipi.groupOne.BotProject;
 import java.awt.event.KeyEvent;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import javax.swing.DefaultListModel;
 import javax.swing.SwingUtilities;
 import org.jibble.pircbot.User;
 
+/**
+ *
+ * @author SpiroTris
+ */
 public class MainFrame extends javax.swing.JFrame {
     
     private BotProject bot;
@@ -18,11 +21,9 @@ public class MainFrame extends javax.swing.JFrame {
      * @param bot - BotProject model
      */
     public MainFrame(BotProject bot) {
-        initComponents();
-        launchGUI.CenteredFrame(this);
-        this.setTitle("PircBot : " + bot.getNick() + " @ " + bot.getChannel());
-        this.setVisible(true);
         this.bot = bot;
+        initComponents();
+        setupComponents();
     }
 
     /**
@@ -104,8 +105,8 @@ public class MainFrame extends javax.swing.JFrame {
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 450, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(topicTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 419, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(7, 7, 7)
+                        .addComponent(jScrollPane1)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(disconnectButton)
@@ -117,6 +118,12 @@ public class MainFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void setupComponents() {
+        launchGUI.CenteredFrame(this);
+        this.setTitle("PircBot : " + bot.getName() + " @ " + bot.getChannel());
+        this.setVisible(true);
+    }
+    
     private void disconnectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_disconnectButtonActionPerformed
         SwingUtilities.invokeLater(new Runnable() {
             @Override

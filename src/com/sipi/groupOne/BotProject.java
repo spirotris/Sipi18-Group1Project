@@ -18,11 +18,11 @@ public class BotProject extends PircBot implements Runnable {
         this.server = server;
         this.channel = channel;
         this.setName(nickname);
-        this.setLogin("botProj");
         this.setAutoNickChange(true);
-        this.setVerbose(true);
+        this.setLogin("sipi18");
         if (saveLog) {
             try {
+                this.setVerbose(true);
                 String todaysDate = new SimpleDateFormat("d.M").format(new Date());
                 String fileName = "irclog-" + todaysDate + ".log";
                 PrintStream fs = new PrintStream(fileName);
@@ -30,6 +30,8 @@ public class BotProject extends PircBot implements Runnable {
             } catch (FileNotFoundException e) {
                 System.err.println("Unable to create logfile.");
             }
+        } else {
+            this.setVerbose(false);
         }
     }
 
