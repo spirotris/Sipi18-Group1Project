@@ -26,6 +26,8 @@ public class FetchMovieInfo {
         if(SEARCHVALUE.toLowerCase().equals("!help")) {
             // The user want help and the help-string is set
             jsonValue.append(sender + "! " + HELPSTRING);
+        } else if(SEARCHVALUE.isEmpty()) {
+            jsonValue.append(SENDER + ", du måste ange ett sökvärde. Ange !movie !help för hjälp.");
         } else {
             // If the user doesn't wan't help
             if (initURL()) {
