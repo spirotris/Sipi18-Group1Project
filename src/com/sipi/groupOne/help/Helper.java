@@ -18,15 +18,24 @@ public class Helper {
     
     private final String SENDER;
     private String[] msgArray;
+
+    private StringBuilder answer = new StringBuilder();
     
     public Helper(String sender, String[] msgArray) {
     	this.SENDER = sender;
+
+    	generateAnswer();
     	
-    	//Vet inte vad denna ska användas till än, men kan vara bra att ha
+    	//Reserved for possible future usage
     	this.msgArray = msgArray;
     }
 
+    // Generate the answer
+    private void generateAnswer(){
+        answer.append(HELLO + SENDER + HOWTO);
+    }
+
     public String getAnswer() {
-        return  HELLO + SENDER + HOWTO;
+        return answer.toString();
     }
 }
