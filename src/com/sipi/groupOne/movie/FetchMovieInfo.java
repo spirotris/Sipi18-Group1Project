@@ -14,21 +14,32 @@ public class FetchMovieInfo {
     private String url;
     private final String SEARCHVALUE;
     private final String SENDER;
+    private final String HELPSTRING = "Med kommandot !movie så söker du efter en film-titel, första bästa svar kommer att fås. För att få till funktionen så anges sökningen: !movie <sökvärde>, t.ex: !movie Titanic";
 
-    private String jsonValue;
+    private StringBuilder jsonValue = new StringBuilder();
 
     // Contructor
     public FetchMovieInfo(String sender, String searchValue) {
         SEARCHVALUE = searchValue;
         SENDER = sender;
-        if(initURL()) {
-            initJSON();
+        System.out.println(searchValue);
+        if(SEARCHVALUE.toLowerCase().equals("!help")) {
+            // The user want help and the help-string is set
+            jsonValue.append(sender + "! " + HELPSTRING);
         } else {
-            jsonValue = sender + ", jag kunde tyvärr inte hitta filen med giltigt URL";
+            // If the user doesn't wan't help
+            if (initURL()) {
+                // The URL to the was possible to be loaded, the call to the api will be made
+                initJSON();
+            } else {
+                // If the url can't be loaded to the file
+                jsonValue.append(sender + ", jag kunde tyvärr inte genomföra sökningen!");
+                System.err.println("Kunde inte ladda urlen från filen application.properties i movie-klassen");
+            }
         }
     }
 
-    // Get the url from application.properties
+    // Get the url with auth-key to the API from application.properties
     private boolean initURL() {
         try {
             File key = new File("src/com/sipi/groupOne/movie/application.properties");
@@ -36,17 +47,18 @@ public class FetchMovieInfo {
             url = b.readLine(); // Reading in single line since it is the only thing in the file
             return true;
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            System.err.println(e.getMessage());
             return false;
         }
     }
 
     // Get information from the api using JSONCon
     private void initJSON() {
+        // Setting the url-call for the API, a standard-answer if there isn't any response and a counter for number of answers
         String json = url + SEARCHVALUE.replace(" ", "+");
         String firstResult = "tomt svar.";
         int nrResults = 0;
-        JSONCon omdbApi = new JSONCon();
+        JSONCon omdbApi = new JSONCon(); // Initiating the class for connection to the API
 
         // Gets an array in return from JSONCon
         JSONArray responseObjects = omdbApi.tryApi(json);
@@ -56,13 +68,12 @@ public class FetchMovieInfo {
 
         // Checks whether the response is true or false (if there was any movies or not) and a safety check so that the array isn't empty
         if(responseObject.get("Response").equals("False") || responseObjects.isEmpty()) {
-            jsonValue = "Hej " + SENDER + "! Jag hittade ingen film med det namnet!";
+            jsonValue.append("Hej " + SENDER + "! Jag hittade ingen film med det namnet!");
         } else {
-            jsonValue = "Hej " + SENDER + "! Jag hittade ";
+            jsonValue.append("Hej " + SENDER + "! Jag hittade ");
             // Picks ut the search-results
             for(Object searchResults : responseObjects) {
                 JSONObject o = (JSONObject)searchResults;
-                System.out.println(o.toJSONString());
                 JSONArray resultsArr = (JSONArray)o.get("Search");
                 Iterator movieItr = resultsArr.iterator();
 
@@ -80,17 +91,18 @@ public class FetchMovieInfo {
                     }
                 }
             }
+            // Sets a nice output
             if(nrResults == 1) {
-                jsonValue += firstResult;
+                jsonValue.append(firstResult);
             } else {
-                jsonValue += nrResults + " filmer som matchade din förfrågan. Första svaret var: " + firstResult + "Försök att göra en mer noggrann sökning om det var fel svar!";
+                jsonValue.append(nrResults + " filmer som matchade din förfrågan. Första svaret var: " + firstResult + "Försök att göra en mer noggrann sökning om det var fel svar!");
             }
         }
     }
 
     // To receive the answer from the api
     public String getAnswer() {
-        return jsonValue;
+        return jsonValue.toString();
     }
 
 }
