@@ -14,7 +14,6 @@ public class ChannelScreener {
             case "!movie":
                 return new FetchMovieInfo(sender, searchString(msgArray)).getAnswer();
             case "!tv":
-            case "!tv":
             case "!serie":
                 return new TVserier(sender, msgArray).getAnswer();
             case "!gps":
