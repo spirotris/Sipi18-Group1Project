@@ -7,35 +7,14 @@ package com.sipi.groupOne.help;
 // For the function !help
 // Describes the different searches the bot can do
 public class Helper {
-    private final String OMDBAPI = "!movie - söker efter filmtitlar";
-    private final String TVMAZE = "!tv - söker serier på olika sätt";
-    private final String GPSAPI = "!gps - hämtar position där ditt ip befinner sig";
 
-    private final String README = "https://github.com/spirotris/Sipi18-Group1Project/blob/master/README.md";
-    
-    private final StringBuilder HOWTO = new StringBuilder(" sökning görs med: <Vad du söker> <Sök-kommando>. , " + OMDBAPI + ", " + TVMAZE + ", " + GPSAPI + ". För mer information: " + README);
-    private static final String HELLO = "Hej ";    
-    
-    private final String SENDER;
-    private String[] msgArray;
-
-    private StringBuilder answer = new StringBuilder();
-    
-    public Helper(String sender, String[] msgArray) {
-    	this.SENDER = sender;
-
-    	generateAnswer();
-    	
-    	//Reserved for possible future usage
-    	this.msgArray = msgArray;
-    }
-
-    // Generate the answer
-    private void generateAnswer(){
-        answer.append(HELLO + SENDER + HOWTO);
-    }
-
-    public String getAnswer() {
-        return answer.toString();
+    public String getAnswer(String sender) {
+        return "Hej " + sender
+                + " sökning görs med: <Vad du söker> <Sök-kommando>. , "
+                + "!movie - söker efter filmtitlar"
+                + "!tv - söker serier på olika sätt"
+                + "!gps - hämtar position där ditt ip befinner sig"
+                + ". För mer information: "
+                + "https://github.com/spirotris/Sipi18-Group1Project/blob/master/README.md";
     }
 }
