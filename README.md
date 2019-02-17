@@ -8,7 +8,7 @@ Här bygger vi en IRC bot som använder sig av Java APIt PircBot. Botten kommer 
 * Kommando `!movie` gör en sökning på filmer via api:et från http://www.omdbapi.com/
 * Kommando `!tv` gör en sökning på tv-serier via api:et från https://www.tvmaze.com/
 * Kommando `!gps` hittar vart din ip-adress befinner dig via api:et från https://freegeoip.app
-
+* Kommando `!help` förklarar hur en sökning går till
 
 
 

@@ -1,5 +1,6 @@
 package com.sipi.groupOne;
 
+import com.sipi.groupOne.help.Helper;
 import com.sipi.groupOne.movie.FetchMovieInfo;
 import com.sipi.groupOne.gps.GetGPS;
 import com.sipi.groupOne.tv.TVserier;
@@ -13,14 +14,14 @@ public class ChannelScreener {
         switch (msgArray[0].toLowerCase()) {           
             case "!movie":
                 return new FetchMovieInfo(sender, searchString(msgArray)).getAnswer();
+            case "!help":
+                return new Helper().getAnswer(sender);
             case "!tv":
             case "!serie":
                 return new TVserier(sender, msgArray).getAnswer();
             case "!gps":
                 return new GetGPS(sender,searchString(msgArray)).getInfo();
-           
         }
-
         return null;
     }
 
@@ -30,7 +31,7 @@ public class ChannelScreener {
         StringBuilder str = new StringBuilder();
         for (int i = 1; i < searchArr.length; i++) {
             if((searchArr.length -1) != i)
-                str.append(searchArr[i] + " ");
+                str.append(searchArr[i]).append(" ");
             else
                 str.append(searchArr[i]);
         }
